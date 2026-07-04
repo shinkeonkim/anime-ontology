@@ -1,0 +1,100 @@
+"""시리즈 디렉토리에서 영상/자막 파일을 화(episode) 단위로 페어링한다.
+
+시리즈마다 파일명 규칙이 다를 수 있으므로, 아래 원칙만으로 동작하도록 만든다.
+
+1. 영상 확장자와 자막 확장자를 재귀적으로 탐색한다.
+2. 확장자를 뗀 파일명(stem)이 같은 영상/자막을 한 쌍으로 묶는다.
+3. stem 끝의 숫자를 에피소드 번호로 쓰고, 숫자가 없으면 자연 정렬 순서를 번호로 쓴다.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from pathlib import Path
+
+VIDEO_EXTENSIONS = {".mp4", ".mkv", ".avi"}
+SUBTITLE_EXTENSIONS = {".smi", ".srt", ".ass", ".vtt"}
+
+_TRAILING_NUMBER = re.compile(r"(\d+)\s*$")
+_NATURAL_SORT_CHUNK = re.compile(r"(\d+)")
+
+
+@dataclass(frozen=True)
+class EpisodeSource:
+    """한 화(episode)에 대응하는 원본 파일 경로 묶음."""
+
+    series: str
+    episode_no: int
+    stem: str
+    video_path: Path | None
+    subtitle_path: Path | None
+
+    @property
+    def has_subtitle(self) -> bool:
+        return self.subtitle_path is not None
+
+
+def _natural_sort_key(stem: str) -> tuple:
+    chunks = _NATURAL_SORT_CHUNK.split(stem)
+    return tuple(int(c) if c.isdigit() else c for c in chunks)
+
+
+def _infer_episode_no(stem: str, fallback_index: int) -> int:
+    match = _TRAILING_NUMBER.search(stem)
+    if match:
+        return int(match.group(1))
+    return fallback_index
+
+
+def discover_episodes(series_dir: Path, series: str | None = None) -> list[EpisodeSource]:
+    """series_dir 하위를 재귀 탐색하여 화 단위로 정렬된 EpisodeSource 목록을 반환한다."""
+
+    series_dir = Path(series_dir)
+    series_name = series or series_dir.name
+
+    videos_by_stem: dict[str, Path] = {}
+    subtitles_by_stem: dict[str, Path] = {}
+
+    for path in series_dir.rglob("*"):
+        if not path.is_file():
+            continue
+        ext = path.suffix.lower()
+        if ext in VIDEO_EXTENSIONS:
+            videos_by_stem.setdefault(path.stem, path)
+        elif ext in SUBTITLE_EXTENSIONS:
+            subtitles_by_stem.setdefault(path.stem, path)
+
+    all_stems = sorted(set(videos_by_stem) | set(subtitles_by_stem), key=_natural_sort_key)
+
+    episodes: list[EpisodeSource] = []
+    seen_episode_nos: dict[int, str] = {}
+    for index, stem in enumerate(all_stems, start=1):
+        episode_no = _infer_episode_no(stem, fallback_index=index)
+        if episode_no in seen_episode_nos:
+            raise ValueError(
+                f"에피소드 번호 {episode_no}가 중복되었습니다: "
+                f"'{seen_episode_nos[episode_no]}'와 '{stem}'"
+            )
+        seen_episode_nos[episode_no] = stem
+        episodes.append(
+            EpisodeSource(
+                series=series_name,
+                episode_no=episode_no,
+                stem=stem,
+                video_path=videos_by_stem.get(stem),
+                subtitle_path=subtitles_by_stem.get(stem),
+            )
+        )
+
+    episodes.sort(key=lambda ep: ep.episode_no)
+    return episodes
+
+
+def find_episode(series_dir: Path, episode_no: int, series: str | None = None) -> EpisodeSource | None:
+    """특정 화 번호에 해당하는 EpisodeSource를 찾는다. 없으면 None."""
+
+    for episode in discover_episodes(series_dir, series=series):
+        if episode.episode_no == episode_no:
+            return episode
+    return None
