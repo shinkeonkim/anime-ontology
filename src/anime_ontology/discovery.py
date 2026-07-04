@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -40,6 +41,16 @@ def _natural_sort_key(stem: str) -> tuple:
     return tuple(int(c) if c.isdigit() else c for c in chunks)
 
 
+def _normalize_stem(stem: str) -> str:
+    """유니코드 정규화 형식(NFC/NFD)을 통일한다.
+
+    macOS(APFS/HFS+)는 한글 파일명을 NFD로 저장하는 반면, 대부분의 다운로드/복사
+    도구는 NFC를 쓴다. 같은 이름의 영상/자막이 서로 다른 정규화 형식으로 존재하면
+    바이트 단위로는 다른 문자열이 되어 페어링이 깨지므로, 비교 전에 NFC로 통일한다.
+    """
+    return unicodedata.normalize("NFC", stem)
+
+
 def _infer_episode_no(stem: str, fallback_index: int) -> int:
     match = _TRAILING_NUMBER.search(stem)
     if match:
@@ -60,10 +71,11 @@ def discover_episodes(series_dir: Path, series: str | None = None) -> list[Episo
         if not path.is_file():
             continue
         ext = path.suffix.lower()
+        stem = _normalize_stem(path.stem)
         if ext in VIDEO_EXTENSIONS:
-            videos_by_stem.setdefault(path.stem, path)
+            videos_by_stem.setdefault(stem, path)
         elif ext in SUBTITLE_EXTENSIONS:
-            subtitles_by_stem.setdefault(path.stem, path)
+            subtitles_by_stem.setdefault(stem, path)
 
     all_stems = sorted(set(videos_by_stem) | set(subtitles_by_stem), key=_natural_sort_key)
 
