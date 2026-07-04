@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>anime-ontology 지식그래프 질의</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<header>
+  <h1>애니메이션 지식그래프에 물어보기</h1>
+  <p class="subtitle">질문을 하면 Cypher로 변환해 Neo4j에서 실행하고, 탐색된 그래프를 함께 보여줍니다.</p>
+</header>
+
+<form id="query-form">
+  <input id="question" type="text" placeholder="예: 나루토와 동료 관계인 캐릭터는 누구야?" autocomplete="off" />
+  <button type="submit">질문하기</button>
+</form>
+<p id="status" class="status"></p>
+<p id="error" class="error" hidden></p>
+
+<section>
+  <h2>답변</h2>
+  <p id="answer" class="answer"></p>
+</section>
+
+<details id="cypher-details">
+  <summary>생성된 Cypher (그래프 탐색 과정 확인)</summary>
+  <pre id="cypher"></pre>
+</details>
+
+<section class="split">
+  <div>
+    <h2>결과 표</h2>
+    <div id="table"></div>
+  </div>
+  <div>
+    <h2>탐색된 그래프 (드래그로 이동 가능)</h2>
+    <svg id="graph"></svg>
+  </div>
+</section>
+
+<script src="/script.js"></script>
+</body>
+</html>

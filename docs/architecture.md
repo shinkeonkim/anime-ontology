@@ -45,6 +45,43 @@ LLMProviderProxy            # LLMProvider를 구현하지만 내부적으로
 
 이렇게 하면 나루토가 아닌 다른 시리즈(예: 원피스)를 추가해도 코어 스키마는 그대로 재사용하고, 시리즈 고유 개념만 확장하면 됩니다.
 
+### 6. 자연어 질의: LLM이 Cypher로 번역 + 이중 안전장치
+
+지식그래프를 만들어도 사람이 Cypher/SPARQL을 직접 짤 수 없으면 활용도가 떨어지므로,
+자연어 질문을 그래프 질의로 바꿔주는 계층(`src/anime_ontology/query/`)을 둡니다.
+
+```
+질문(자연어)
+  -> schema_context.build_schema_description()   # core.ttl에서 라벨/관계/속성 설명 생성
+  -> cypher_generation.generate_cypher(llm, ...)  # LLM Provider Proxy로 Cypher 생성
+  -> safety.ensure_read_only() / ensure_limit()   # 쓰기 절 차단, LIMIT 강제
+  -> executor.execute_cypher()                    # RoutingControl.READ로 실행(서버도 쓰기 거부)
+  -> answer.synthesize_answer(llm, ...)           # 결과를 근거로 자연어 답변 생성
+```
+
+실행이 실패하면(문법 오류 등) 오류 메시지를 다시 LLM에 보여주고 한 번 더 Cypher
+생성을 시도합니다(`NLQueryEngine`, 기본 최대 2회). 쓰기 절 차단은 두 겹으로 방어합니다.
+
+1. 정적 검사: 생성된 Cypher 문자열에 `CREATE/MERGE/DELETE/SET/REMOVE/DROP` 등이
+   보이면 실행 전에 거부한다(`query/safety.py`).
+2. 서버 강제: Neo4j 드라이버의 `RoutingControl.READ`로 실행해, 혹시 정적 검사를
+   피해간 쓰기 절이 있어도 Neo4j 자신이 "읽기 전용 트랜잭션에서 쓰기 시도"로 거부한다.
+
+Cypher 생성 스키마 설명은 `ontology/property_graph_mapping.py`(Neo4j 내보내기와 동일한
+라벨/관계 변환 규칙)를 그대로 재사용하므로, 내보내기 규칙이 바뀌면 질의 쪽 스키마
+설명도 자동으로 같이 바뀝니다. 같은 이유로 Neo4j 내보내기에는 OWL 서브클래스 폐쇄
+(`build_superclass_closure`)를 반영해, `Skill`/`InnateAbility` 노드가 상위 개념인
+`:Ability` 라벨도 함께 갖도록 해서 추상적인 질문("무슨 능력이 있어?")도 답할 수 있게
+했습니다.
+
+### 7. 웹 뷰: FastAPI + 자체 구현 그래프 렌더러
+
+`src/anime_ontology/webapp/`이 위 질의 엔진을 감싸는 FastAPI 앱을 제공합니다
+(`POST /api/query`). 프론트엔드(`webapp/static/`)는 답변, 생성된 Cypher(펼쳐보기),
+결과 표와 함께 탐색된 서브그래프를 그립니다. 그래프 렌더링은 외부 CDN 라이브러리
+없이 순수 JS로 간단한 force-directed 레이아웃(반발력 + 스프링 + 중심 인력을 고정
+횟수 반복)을 구현해, 인터넷 연결이 없는 환경에서도 그대로 동작합니다.
+
 ## 파이프라인 흐름 (에피소드 1개 기준)
 
 ```

@@ -15,7 +15,7 @@
 ## 디렉토리 구조
 
 ```
-naruto/1~100/            # 원본 데이터 (영상+자막, 시리즈별 예시)
+naruto/1~100/            # 원본 데이터 (영상+자막, 시리즈별 예시, git 미포함)
 src/anime_ontology/      # 파이프라인 코드
   discovery.py           # 시리즈 디렉토리에서 영상/자막 페어링
   subtitles/             # 자막 파서 (SAMI 등)
@@ -23,6 +23,9 @@ src/anime_ontology/      # 파이프라인 코드
   extraction/            # 자막 -> 개체/관계 추출
   ontology/              # RDF/OWL 온톨로지 스키마 및 빌더
   export/                # Neo4j 내보내기
+  query/                 # 자연어 질문 -> Cypher 생성/실행/답변 합성
+  webapp/                # 자연어 질의 웹 뷰 (FastAPI + 정적 프론트엔드)
+  neo4j_client.py        # Neo4j 연결 설정 (export/query 공유)
   pipeline.py            # 에피소드 단위 오케스트레이션
 scripts/                 # CLI 실행 스크립트
 data/<series>/ontology/  # 시리즈별로 누적되는 온톨로지(.ttl) 결과물
@@ -69,3 +72,24 @@ python scripts/export_neo4j.py naruto
 
 브라우저에서 http://localhost:7475 로 접속해 Cypher로 탐색할 수 있습니다 (예:
 `MATCH (n:Character)-[r]->(m) RETURN n, r, m LIMIT 100`).
+
+## 자연어로 질문하기 (웹 뷰)
+
+Neo4j로 내보낸 뒤, 자연어 질문 -> Cypher 자동 생성 -> 실행 -> 답변 + 그래프
+시각화까지 보여주는 웹 서버를 띄울 수 있습니다.
+
+```bash
+python scripts/run_web.py            # http://127.0.0.1:8000
+python scripts/run_web.py --port 8080
+```
+
+- 질문을 입력하면 LLM(Provider Proxy)이 온톨로지 스키마를 참고해 읽기 전용 Cypher를
+  생성하고, Neo4j에서 실행한 결과로 자연어 답변을 만듭니다.
+- 생성된 Cypher는 화면에서 펼쳐볼 수 있어 "어떻게 탐색했는지" 그대로 확인할 수
+  있습니다.
+- 결과에 포함된 노드/관계는 페이지 내 그래프 뷰에 그대로 그려집니다(드래그로 위치
+  조정 가능). 외부 JS 라이브러리 없이 자체 구현되어 있어 인터넷 연결이 없어도
+  동작합니다.
+- 안전장치: 생성된 Cypher에 `CREATE/MERGE/DELETE/SET` 등 쓰기 절이 있으면 실행 전에
+  차단하고, 실행 자체도 Neo4j의 읽기 전용 트랜잭션으로만 수행해 이중으로 방어합니다.
+  실행이 실패하면 오류를 LLM에 피드백해 한 번 더 쿼리를 고쳐 재시도합니다.
