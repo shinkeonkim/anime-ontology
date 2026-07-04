@@ -11,9 +11,11 @@ from typing import Callable
 
 from anime_ontology.subtitles.models import SubtitleCue
 from anime_ontology.subtitles.smi_parser import parse_smi
+from anime_ontology.subtitles.srt_parser import parse_srt
 
 _PARSERS: dict[str, Callable[[Path], list[SubtitleCue]]] = {
     ".smi": parse_smi,
+    ".srt": parse_srt,
 }
 
 

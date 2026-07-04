@@ -5,6 +5,7 @@
 1. 영상 확장자와 자막 확장자를 재귀적으로 탐색한다.
 2. 확장자를 뗀 파일명(stem)이 같은 영상/자막을 한 쌍으로 묶는다.
 3. stem 끝의 숫자를 에피소드 번호로 쓰고, 숫자가 없으면 자연 정렬 순서를 번호로 쓴다.
+4. stem 끝이 "221~222"처럼 두 숫자면 합본 화로 보고, 같은 파일을 두 화 번호 모두에 매핑한다.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ VIDEO_EXTENSIONS = {".mp4", ".mkv", ".avi"}
 SUBTITLE_EXTENSIONS = {".smi", ".srt", ".ass", ".vtt"}
 
 _TRAILING_NUMBER = re.compile(r"(\d+)\s*$")
+_COMBINED_TRAILING_NUMBERS = re.compile(r"(\d+)\s*~\s*(\d+)\s*$")
 _NATURAL_SORT_CHUNK = re.compile(r"(\d+)")
 
 
@@ -51,11 +53,17 @@ def _normalize_stem(stem: str) -> str:
     return unicodedata.normalize("NFC", stem)
 
 
-def _infer_episode_no(stem: str, fallback_index: int) -> int:
+def _infer_episode_numbers(stem: str, fallback_index: int) -> list[int]:
+    """stem에서 화 번호를 추론한다. "221~222"처럼 합본 화면 두 번호를 모두 반환한다."""
+    combined = _COMBINED_TRAILING_NUMBERS.search(stem)
+    if combined:
+        start, end = int(combined.group(1)), int(combined.group(2))
+        return list(range(start, end + 1))
+
     match = _TRAILING_NUMBER.search(stem)
     if match:
-        return int(match.group(1))
-    return fallback_index
+        return [int(match.group(1))]
+    return [fallback_index]
 
 
 def discover_episodes(series_dir: Path, series: str | None = None) -> list[EpisodeSource]:
@@ -82,22 +90,24 @@ def discover_episodes(series_dir: Path, series: str | None = None) -> list[Episo
     episodes: list[EpisodeSource] = []
     seen_episode_nos: dict[int, str] = {}
     for index, stem in enumerate(all_stems, start=1):
-        episode_no = _infer_episode_no(stem, fallback_index=index)
-        if episode_no in seen_episode_nos:
-            raise ValueError(
-                f"에피소드 번호 {episode_no}가 중복되었습니다: "
-                f"'{seen_episode_nos[episode_no]}'와 '{stem}'"
+        # "221~222"처럼 두 화가 한 파일로 합본 발매된 경우, 같은 영상/자막을
+        # 두 화 번호 모두에 매핑한다(내용을 나눌 기준이 없어 그대로 중복 처리).
+        for episode_no in _infer_episode_numbers(stem, fallback_index=index):
+            if episode_no in seen_episode_nos:
+                raise ValueError(
+                    f"에피소드 번호 {episode_no}가 중복되었습니다: "
+                    f"'{seen_episode_nos[episode_no]}'와 '{stem}'"
+                )
+            seen_episode_nos[episode_no] = stem
+            episodes.append(
+                EpisodeSource(
+                    series=series_name,
+                    episode_no=episode_no,
+                    stem=stem,
+                    video_path=videos_by_stem.get(stem),
+                    subtitle_path=subtitles_by_stem.get(stem),
+                )
             )
-        seen_episode_nos[episode_no] = stem
-        episodes.append(
-            EpisodeSource(
-                series=series_name,
-                episode_no=episode_no,
-                stem=stem,
-                video_path=videos_by_stem.get(stem),
-                subtitle_path=subtitles_by_stem.get(stem),
-            )
-        )
 
     episodes.sort(key=lambda ep: ep.episode_no)
     return episodes

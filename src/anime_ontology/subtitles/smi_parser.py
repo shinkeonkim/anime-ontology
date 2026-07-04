@@ -10,22 +10,12 @@ import html
 import re
 from pathlib import Path
 
+from anime_ontology.subtitles.encoding import decode_subtitle_bytes
 from anime_ontology.subtitles.models import SubtitleCue
 
 _SYNC_TAG = re.compile(r"<SYNC\s+Start\s*=\s*(\d+)[^>]*>", re.IGNORECASE)
 _BR_TAG = re.compile(r"<br\s*/?>", re.IGNORECASE)
 _ANY_TAG = re.compile(r"<[^>]+>")
-
-_ENCODING_CANDIDATES = ("utf-8", "cp949", "euc-kr")
-
-
-def _decode(raw: bytes) -> str:
-    for encoding in _ENCODING_CANDIDATES:
-        try:
-            return raw.decode(encoding)
-        except UnicodeDecodeError:
-            continue
-    return raw.decode("utf-8", errors="replace")
 
 
 def _clean_block_text(block: str) -> str:
@@ -39,7 +29,7 @@ def _clean_block_text(block: str) -> str:
 def parse_smi(path: Path) -> list[SubtitleCue]:
     """SAMI(.smi) 자막 파일을 시간순 SubtitleCue 목록으로 변환한다."""
 
-    text = _decode(Path(path).read_bytes())
+    text = decode_subtitle_bytes(Path(path).read_bytes())
     matches = list(_SYNC_TAG.finditer(text))
 
     cues: list[SubtitleCue] = []
