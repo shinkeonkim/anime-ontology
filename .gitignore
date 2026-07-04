@@ -19,5 +19,8 @@ data/*/extraction_cache/*.json
 # Docker로 띄운 Neo4j 데이터 볼륨 (재생성 가능한 파생 산출물)
 .neo4j/
 
+# Claude Code 로컬 설정/상태
+.claude/
+
 # OS
 .DS_Store

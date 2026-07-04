@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import re
+import sys
 
 from rdflib import RDF, RDFS, Graph, Literal, URIRef
 
@@ -105,6 +106,17 @@ class OntologyBuilder:
                     break
 
         if uri is None:
+            conflict = next(
+                (k for k in self._name_index if k[1] == name.casefold() and k[0] != class_uri), None
+            )
+            if conflict is not None:
+                print(
+                    f"경고: '{name}'이(가) 이미 {_CLASS_LOCAL_NAME[conflict[0]]} 타입으로 존재하는데 "
+                    f"{_CLASS_LOCAL_NAME[class_uri]} 타입으로도 생성 요청되었습니다. "
+                    "LLM이 관계의 predicate/대상을 잘못 짝지었을 수 있습니다.",
+                    file=sys.stderr,
+                )
+
             local_name = _CLASS_LOCAL_NAME[class_uri]
             uri = self._ns[f"{local_name}_{_slugify(name)}"]
             self._graph.add((uri, RDF.type, class_uri))
