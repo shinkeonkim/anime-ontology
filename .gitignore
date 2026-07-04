@@ -18,8 +18,9 @@ venv/
 # 환경설정 (API 키 등 비밀값 포함)
 .env
 
-# LLM 추출 캐시 (재실행으로 다시 생성 가능한 산출물)
+# LLM 추출/STT 캐시 (재실행으로 다시 생성 가능한 산출물)
 data/*/extraction_cache/*.json
+data/*/transcript_cache/*.json
 
 # Docker로 띄운 Neo4j 데이터 볼륨 (재생성 가능한 파생 산출물)
 .neo4j/
