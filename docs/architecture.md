@@ -34,9 +34,31 @@ LLMProviderProxy            # LLMProvider를 구현하지만 내부적으로
 
 이 덕분에 새로운 시리즈를 추가할 때 코드 수정 없이 디렉토리만 놓으면 동작합니다.
 
-### 4. 자막 우선, 영상은 후순위
+### 4. 자막 우선, 없으면 STT(+선택적 장면 분석)로 대체
 
-현재 파이프라인은 자막 텍스트만으로 추출을 수행합니다. 자막이 없는 에피소드(향후 영상 STT/OCR 등)는 범위 밖이며, 필요해지면 `subtitles` 패키지와 동일한 인터페이스로 별도 모듈을 추가할 수 있습니다.
+`pipeline._collect_cues`가 화별로 다음 순서로 자막 텍스트를 확보합니다.
+
+1. 자막 파일이 있으면 그것을 우선 사용한다(`subtitles.parse_subtitle`).
+2. 없고 영상만 있으면 ffmpeg로 오디오를 뽑아 STT(`transcription` 패키지)로 대사를
+   텍스트화한다. STT도 LLM과 동일하게 Provider 추상화(Proxy 패턴)를 적용해
+   `TRANSCRIPTION_PROVIDER`(기본값 `local_whisper`, API 키 불필요) 설정만으로
+   `openai`(Whisper API) 등으로 바꿀 수 있다.
+3. `SCENE_ANALYSIS_ENABLED=true`면 `vision` 패키지로 기본적인 장면 분석을 추가한다.
+   OpenCV 없이 ffmpeg의 scene 필터로 장면 전환 시점을 찾고, 그 시점의 프레임을
+   캡처해 pytesseract(한국어)로 화면에 찍힌 텍스트(기술명 자막 등)를 읽어 대사
+   큐 사이에 `(화면 텍스트) ...` 형태로 끼워 넣는다. 장면 분석은 보조 정보라
+   실패해도 STT 결과만으로 계속 진행한다(하드 실패시키지 않음).
+
+STT/OCR 결과 모두 자막과 동일한 `SubtitleCue` 형태로 변환되므로, 추출 모듈
+(`extraction/extractor.py`)은 대사가 자막에서 왔는지 STT/OCR에서 왔는지 신경 쓰지
+않는다. STT 결과도 화 단위로 캐시(`data/<series>/transcript_cache/`)해 재실행 시
+오디오 추출/음성 인식을 다시 하지 않는다.
+
+무거운 의존성(faster-whisper, pytesseract/Pillow)은 기본 설치에 포함하지 않고
+`pip install -e ".[stt,vision]"`로 선택 설치한다. 실제 음성 인식/OCR 품질은 모델과
+원본 음질/폰트에 크게 좌우되며(배경음악이 섞인 구간, 양식화된 폰트의 타이틀 카드
+등에서는 결과가 부정확할 수 있음), 이는 파이프라인 통합 문제가 아니라 STT/OCR
+기술 자체의 한계로 별도 사안이다.
 
 ### 5. 온톨로지 스키마: 코어 + 시리즈 확장
 

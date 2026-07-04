@@ -18,3 +18,10 @@ def require_env(name: str) -> str:
     if not value:
         raise RuntimeError(f"환경변수 '{name}'가 설정되지 않았습니다. .env를 확인하세요.")
     return value
+
+
+def env_flag(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}

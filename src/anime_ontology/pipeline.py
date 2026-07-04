@@ -1,14 +1,25 @@
-"""에피소드 단위로 전체 파이프라인(자막 파싱 -> 추출 -> 온톨로지 병합 -> 저장)을 오케스트레이션한다."""
+"""에피소드 단위로 전체 파이프라인(자막/영상 확보 -> 추출 -> 온톨로지 병합 -> 저장)을 오케스트레이션한다."""
 
 from __future__ import annotations
 
+import sys
+import tempfile
 from pathlib import Path
 
-from anime_ontology.discovery import find_episode
+from anime_ontology.config import env_flag
+from anime_ontology.discovery import EpisodeSource, find_episode
 from anime_ontology.extraction import extract_episode, load_cached_extraction, save_extraction_cache
 from anime_ontology.llm import LLMProvider, LLMProviderProxy
 from anime_ontology.ontology import OntologyBuilder, load_series_graph, save_series_graph
-from anime_ontology.subtitles import parse_subtitle
+from anime_ontology.subtitles import SubtitleCue, parse_subtitle
+from anime_ontology.transcription import (
+    TranscriptionProvider,
+    TranscriptionProviderProxy,
+    extract_audio,
+    load_cached_transcript,
+    save_transcript_cache,
+)
+from anime_ontology.vision import VisualCue, analyze_scenes
 
 
 def parse_episode_range(spec: str) -> list[int]:
@@ -20,25 +31,69 @@ def parse_episode_range(spec: str) -> list[int]:
     return [int(spec)]
 
 
+def _merge_visual_cues(dialogue_cues: list[SubtitleCue], visual_cues: list[VisualCue]) -> list[SubtitleCue]:
+    """OCR로 읽은 화면 텍스트를, 대사 큐와 같은 시간축에 표시를 붙여 합친다."""
+    visual_as_cues = [
+        SubtitleCue(start_ms=cue.timestamp_ms, end_ms=cue.timestamp_ms + 2000, text=f"(화면 텍스트) {cue.text}")
+        for cue in visual_cues
+    ]
+    return sorted([*dialogue_cues, *visual_as_cues], key=lambda cue: cue.start_ms)
+
+
+def _collect_cues(
+    episode: EpisodeSource,
+    data_dir: Path,
+    *,
+    transcription: TranscriptionProvider | None,
+    force: bool,
+) -> list[SubtitleCue]:
+    """자막이 있으면 자막을 우선 사용하고, 없으면 STT(+선택적 장면 분석)로 대사를 확보한다."""
+
+    if episode.has_subtitle:
+        return parse_subtitle(episode.subtitle_path)
+
+    if episode.video_path is None:
+        raise ValueError(f"{episode.episode_no}화에 자막도 영상도 없습니다: {episode.stem}")
+
+    cached = None if force else load_cached_transcript(data_dir, episode.series, episode.episode_no)
+    if cached is not None:
+        cues = cached
+    else:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            audio_path = extract_audio(episode.video_path, Path(tmp_dir) / "audio.wav")
+            provider = transcription or TranscriptionProviderProxy.from_env()
+            cues = provider.transcribe(audio_path, language="ko")
+        save_transcript_cache(cues, data_dir, episode.series, episode.episode_no)
+
+    if env_flag("SCENE_ANALYSIS_ENABLED"):
+        try:
+            visual_cues = analyze_scenes(episode.video_path)
+            cues = _merge_visual_cues(cues, visual_cues)
+        except Exception as exc:  # noqa: BLE001 - 장면 분석은 보조 정보라 실패해도 STT 결과로 계속 진행
+            print(f"경고: {episode.episode_no}화 장면 분석 실패, 음성 인식 결과만 사용합니다: {exc}", file=sys.stderr)
+
+    return cues
+
+
 def run_episode(
     series_dir: Path,
     data_dir: Path,
     episode_no: int,
     *,
     llm: LLMProvider | None = None,
+    transcription: TranscriptionProvider | None = None,
     force: bool = False,
 ) -> Path:
     """한 화를 처리해 시리즈 온톨로지에 병합하고, 저장된 ttl 경로를 반환한다.
 
-    이미 캐시된 추출 결과가 있으면 LLM을 다시 호출하지 않는다(force=True면 무시하고 재호출).
+    자막이 있으면 자막을, 없으면 영상에서 음성 인식(STT)으로 대사를 확보한다.
+    이미 캐시된 결과가 있으면 LLM/STT를 다시 호출하지 않는다(force=True면 재호출).
     온톨로지 병합 자체도 이름 기반 중복 제거를 하므로 몇 번을 다시 실행해도 결과가 같다.
     """
 
     episode = find_episode(series_dir, episode_no)
     if episode is None:
         raise ValueError(f"{episode_no}화 원본을 찾을 수 없습니다: {series_dir}")
-    if not episode.has_subtitle:
-        raise ValueError(f"{episode_no}화에 자막이 없습니다: {episode.subtitle_path}")
 
     series = episode.series
 
@@ -46,7 +101,7 @@ def run_episode(
     if cached_result is not None:
         result = cached_result
     else:
-        cues = parse_subtitle(episode.subtitle_path)
+        cues = _collect_cues(episode, data_dir, transcription=transcription, force=force)
         provider = llm or LLMProviderProxy.from_env()
         result = extract_episode(provider, series, episode_no, cues)
         save_extraction_cache(result, data_dir, series, episode_no)
@@ -62,13 +117,14 @@ def run_episodes(
     episode_numbers: list[int],
     *,
     llm: LLMProvider | None = None,
+    transcription: TranscriptionProvider | None = None,
     force: bool = False,
 ) -> Path:
     """여러 화를 순서대로 처리한다. 마지막으로 저장된 ttl 경로를 반환한다."""
 
     output_path: Path | None = None
     for episode_no in episode_numbers:
-        output_path = run_episode(series_dir, data_dir, episode_no, llm=llm, force=force)
+        output_path = run_episode(series_dir, data_dir, episode_no, llm=llm, transcription=transcription, force=force)
     if output_path is None:
         raise ValueError("처리할 화 번호가 비어 있습니다.")
     return output_path

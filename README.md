@@ -8,7 +8,7 @@
 ## 개요
 
 1. 각 시리즈는 저장소 루트에 하나의 디렉토리로 존재합니다 (예: `naruto/`). 그 안에 영상(mp4 등)과 자막(smi 등) 파일이 화별로 쌍을 이루어 들어갑니다.
-2. 자막이 있는 에피소드는 자막을 1차 소스로 사용해 캐릭터, 장소, 조직, 기술/스킬, 사건 등을 추출합니다.
+2. 자막이 있는 에피소드는 자막을 1차 소스로 사용하고, 자막이 없으면 영상에서 음성 인식(STT)으로, 필요하면 화면 텍스트 OCR까지 더해 대사를 확보한 뒤 캐릭터, 장소, 조직, 기술/스킬, 사건 등을 추출합니다.
 3. 추출은 특정 LLM 벤더에 종속되지 않도록 Provider 추상화(Proxy 패턴)를 통해 이루어지며, `.env` 설정만으로 OpenAI / Ollama(로컬) / Anthropic 중 어떤 LLM을 쓸지 바꿀 수 있습니다.
 4. 추출 결과는 RDF/OWL 온톨로지(시리즈 공통 코어 스키마 + 시리즈별 확장)로 축적되며, 필요 시 Neo4j로 내보내 시각화·탐색할 수 있습니다.
 5. 모든 파이프라인 단계는 재실행해도 안전(idempotent)하도록 설계합니다.
@@ -28,11 +28,14 @@ src/anime_ontology/      # 파이프라인 코드
   export/                # Neo4j 내보내기
   query/                 # 자연어 질문 -> Cypher 생성/실행/답변 합성
   webapp/                # 자연어 질의 웹 뷰 (FastAPI + 정적 프론트엔드)
+  transcription/         # 자막 없는 영상용 STT Provider 추상화 (Proxy)
+  vision/                # 기본 장면 분석 (장면 전환 감지 + 화면 텍스트 OCR)
   neo4j_client.py        # Neo4j 연결 설정 (export/query 공유)
   pipeline.py            # 에피소드 단위 오케스트레이션
 scripts/                 # CLI 실행 스크립트
 data/<series>/ontology/  # 시리즈별로 누적되는 온톨로지(.ttl) 결과물
 data/<series>/extraction_cache/  # LLM 추출 원본 캐시 (재실행 방지용, git 미포함)
+data/<series>/transcript_cache/  # STT 결과 캐시 (재실행 방지용, git 미포함)
 docs/                    # 설계 문서
 ```
 
@@ -60,6 +63,34 @@ python scripts/run_episode.py naruto --episodes 1-5 --force
 ```
 
 결과는 `data/naruto/ontology/naruto.ttl`에 누적됩니다.
+
+## 자막이 없는 영상 처리하기 (선택)
+
+시리즈 디렉토리에 영상만 있고 자막 파일이 없으면, `run_episode`/`run_episodes`가
+자동으로 음성 인식(STT)으로 대체합니다. 별도 명령이 필요 없고, 자막이 있는 화와
+같은 명령(`python scripts/run_episode.py <series> --episode N`)을 쓰면 됩니다.
+
+```bash
+uv pip install -e ".[stt]"       # faster-whisper 설치 (로컬 실행, API 키 불필요)
+# 시스템에 ffmpeg가 설치되어 있어야 합니다.
+```
+
+`.env`의 `TRANSCRIPTION_PROVIDER`로 `local_whisper`(기본값) / `openai`를 선택할 수
+있습니다(LLM Provider와 동일한 Proxy 패턴). 추가로 화면에 찍힌 텍스트(기술명 자막
+등)까지 읽고 싶다면:
+
+```bash
+uv pip install -e ".[vision]"    # pytesseract 설치
+# 시스템에 tesseract(+한국어 언어팩)가 설치되어 있어야 합니다.
+```
+
+그리고 `.env`에서 `SCENE_ANALYSIS_ENABLED=true`로 설정하면, ffmpeg의 장면 전환
+감지 + OCR로 얻은 화면 텍스트가 대사 큐 사이에 섞여 추출에 함께 쓰입니다. 장면
+분석은 보조 정보라 실패해도 음성 인식 결과만으로 계속 진행합니다.
+
+STT/OCR 결과 모두 화 단위로 캐시되어 재실행 시 다시 계산하지 않으며, 실제 인식
+품질은 음질/폰트 등 원본 상태에 따라 달라질 수 있습니다(자막이 있는 경우보다
+정확도가 낮을 수 있음).
 
 ## Neo4j로 시각화하기 (선택)
 
