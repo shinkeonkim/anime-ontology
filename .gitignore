@@ -1,0 +1,20 @@
+# 원본 영상 (용량이 크고 저작권상 로컬에만 보관, git에는 포함하지 않음)
+*.mp4
+*.mkv
+*.avi
+
+# 파이썬
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# 환경설정 (API 키 등 비밀값 포함)
+.env
+
+# LLM 추출 캐시 (재실행으로 다시 생성 가능한 산출물)
+data/*/extraction_cache/*.json
+
+# OS
+.DS_Store
