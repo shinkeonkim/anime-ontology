@@ -3,334 +3,332 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-naruto:Artifact_구미호 a anime:Artifact ;
-    rdfs:label "구미호"@ko ;
-    rdfs:comment "나루토에게 봉인된 거대한 괴물 여우의 정령/생명체."@ko ;
+naruto:Artifact_구미호_봉인 a anime:Artifact ;
+    rdfs:label "구미호 봉인"@ko ;
+    rdfs:comment "나루토의 배꼽에 이루어진 구미호 봉인."@ko ;
     anime:mentionedIn naruto:Episode_2 .
 
 naruto:Artifact_두루마리 a anime:Artifact ;
     rdfs:label "두루마리"@ko ;
-    rdfs:comment "강력한 술법이 담긴 중요한 물건."@ko ;
+    rdfs:comment "마을의 비밀이나 힘이 담겨 있는 중요한 물건."@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
-naruto:Artifact_방울 a anime:Artifact ;
-    rdfs:label "방울"@ko ;
-    rdfs:comment "닌자 아카데미 졸업 시험에서 사용되는 물건"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
+naruto:Artifact_두루마리_\(금지된_인술\) a anime:Artifact ;
+    rdfs:label "두루마리 (금지된 인술)"@ko ;
+    rdfs:comment "봉인되어 있는 위험한 술법이 기록된 두루마리."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
 
 naruto:Artifact_봉인의_서 a anime:Artifact ;
     rdfs:label "봉인의 서"@ko ;
-    rdfs:comment "초대 호카게가 봉인한 금지된 인술 기록물."@ko ;
+    rdfs:comment "초대 호카게가 봉인한 위험하고 금지된 인술이 기록된 책."@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
 naruto:Artifact_위령비 a anime:Artifact ;
     rdfs:label "위령비"@ko ;
-    rdfs:comment "마을의 영웅들이 새겨진 비석"@ko ;
+    rdfs:comment "마을 영웅들의 이름이 새겨진 비석."@ko ;
     anime:mentionedIn naruto:Episode_5 .
 
-naruto:Character_4대_호카게 a anime:Character ;
-    rdfs:label "4대 호카게"@ko ;
-    rdfs:comment "마을을 괴물 여우로부터 지켜낸 영웅이자 전설적인 닌자."@ko ;
-    anime:mentionedIn naruto:Episode_1 .
+naruto:Character_가마마자_키바 a anime:Character ;
+    rdfs:label "가마마자 키바"@ko ;
+    rdfs:comment "팀원 중 한 명."@ko ;
+    anime:aliasName "키바"@ko ;
+    anime:mentionedIn naruto:Episode_3 .
 
-naruto:Character_시노 a anime:Character ;
-    rdfs:label "시노"@ko ;
-    rdfs:comment "10반에 속한 남성 캐릭터."@ko ;
-    anime:aliasName "아부라메 시노"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
+naruto:Character_나라_시마카루 a anime:Character ;
+    rdfs:label "나라 시마카루"@ko ;
+    rdfs:comment "팀원 중 한 명."@ko ;
+    anime:aliasName "시마카루"@ko ;
+    anime:mentionedIn naruto:Episode_3 .
 
-naruto:Character_시마카루 a anime:Character ;
-    rdfs:label "시마카루"@ko ;
-    rdfs:comment "게으른 성격의 캐릭터."@ko ;
-    anime:aliasName "나라 시마카루"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
+naruto:Character_미즈키 a anime:Character ;
+    rdfs:label "미즈키"@ko ;
+    rdfs:comment "나루토에게 비밀을 알려주며 위협하는 인물."@ko ;
+    anime:aliasName "미즈키 선생님"@ko ;
+    anime:enemyOf naruto:Character_우즈마키_나루토 ;
+    anime:mentionedIn naruto:Episode_1 ;
+    anime:participatesIn naruto:Event_1_2 .
 
-naruto:Character_엘리트교사_에비스 a anime:Character ;
-    rdfs:label "엘리트교사 에비스"@ko ;
-    rdfs:comment "나루토에게 술법을 가르치는 교사."@ko ;
+naruto:Character_아쿠마가_아키미치_쵸지 a anime:Character ;
+    rdfs:label "아쿠마가 아키미치 쵸지"@ko ;
+    rdfs:comment "팀원 중 한 명."@ko ;
+    anime:aliasName "쵸지"@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+naruto:Character_에비스 a anime:Character ;
+    rdfs:label "에비스"@ko ;
+    rdfs:comment "닌자 기술(인술)을 가르치는 엘리트 교사."@ko ;
+    anime:hasAbility naruto:InnateAbility_챠크라,
+        naruto:Skill_변화술,
+        naruto:Skill_애로변화술,
+        naruto:Skill_인술 ;
     anime:mentionedIn naruto:Episode_2 ;
-    anime:mentorOf naruto:Character_우즈마키_나루토 ;
-    anime:participatesIn naruto:Event_2_0 .
+    anime:mentorOf naruto:Character_우즈마키_나루토 .
+
+naruto:Character_요리토카_아키미치_이노 a anime:Character ;
+    rdfs:label "요리토카 아키미치 이노"@ko ;
+    rdfs:comment "팀원 중 한 명."@ko ;
+    anime:aliasName "이노"@ko ;
+    anime:mentionedIn naruto:Episode_3 .
 
 naruto:Character_요호 a anime:Character ;
     rdfs:label "요호"@ko ;
-    rdfs:comment "아홉 개의 꼬리를 가진 요괴."@ko ;
+    rdfs:comment "강력한 힘을 지닌 여우 요괴."@ko ;
     anime:aliasName "괴물여우"@ko,
-        "구미호"@ko ;
-    anime:hasAbility naruto:Skill_구미호_봉인술 ;
+        "구미호"@ko,
+        "아홉 개의 꼬리를 가진 요호"@ko ;
+    anime:hasAbility naruto:InnateAbility_구미호의_힘 ;
     anime:mentionedIn naruto:Episode_1,
         naruto:Episode_2 ;
     anime:participatesIn naruto:Event_1_0,
-        naruto:Event_2_1 .
+        naruto:Event_2_0 .
 
-naruto:Character_이노 a anime:Character ;
-    rdfs:label "이노"@ko ;
-    rdfs:comment "졸업생 설명회에 참여한 인물."@ko ;
-    anime:aliasName "야마나카 이노"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
+naruto:Character_이루카 a anime:Character ;
+    rdfs:label "이루카"@ko ;
+    rdfs:comment "나루토의 스승이자 담당 교사."@ko ;
+    anime:aliasName "이루카 선생님"@ko ;
+    anime:mentionedIn naruto:Episode_1,
+        naruto:Episode_2,
+        naruto:Episode_3,
+        naruto:Episode_4,
+        naruto:Episode_5 ;
+    anime:mentorOf naruto:Character_우즈마키_나루토,
+        naruto:Character_우치하_사스케,
+        naruto:Character_하루노_사쿠라 ;
+    anime:participatesIn naruto:Event_1_3,
+        naruto:Event_1_4,
+        naruto:Event_3_0 .
 
-naruto:Character_쵸지 a anime:Character ;
-    rdfs:label "쵸지"@ko ;
-    rdfs:comment "음식과 관련된 캐릭터."@ko ;
-    anime:aliasName "아키미치 쵸지"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
-
-naruto:Character_카카시_선생님 a anime:Character ;
-    rdfs:label "카카시 선생님"@ko ;
-    rdfs:comment "선생님"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
+naruto:Character_카카시 a anime:Character ;
+    rdfs:label "카카시"@ko ;
+    rdfs:comment "선생님 역할의 인물."@ko ;
+    anime:aliasName "선생님"@ko,
+        "카카시 선생님"@ko ;
+    anime:hasAbility naruto:Skill_몸_바꿔치기_술법,
+        naruto:Skill_변화술,
+        naruto:Skill_화둔\(火遁\)의_술법,
+        naruto:Skill_환술\(幻術\) ;
+    anime:mentionedIn naruto:Episode_3,
+        naruto:Episode_4,
+        naruto:Episode_5 ;
+    anime:mentorOf naruto:Character_우즈마키_나루토,
+        naruto:Character_우치하_사스케,
+        naruto:Character_하루노_사쿠라,
+        naruto:Organization_7반,
+        naruto:Organization_제_7반 ;
+    anime:participatesIn naruto:Event_4_1 ;
     anime:studentOf naruto:Character_우즈마키_나루토 .
-
-naruto:Character_키바 a anime:Character ;
-    rdfs:label "키바"@ko ;
-    rdfs:comment "10반에 속한 남성 캐릭터."@ko ;
-    anime:aliasName "이누즈카 키바"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
 
 naruto:Character_호카게님 a anime:Character ;
     rdfs:label "호카게님"@ko ;
-    rdfs:comment "나루토의 스승이자 마을의 지도자."@ko ;
-    anime:allyOf naruto:Character_우즈마키_나루토 ;
-    anime:mentionedIn naruto:Episode_1 .
-
-naruto:Character_히나타 a anime:Character ;
-    rdfs:label "히나타"@ko ;
-    rdfs:comment "8반에 속한 여성 캐릭터."@ko ;
-    anime:aliasName "휴우가 히나타"@ko ;
-    anime:mentionedIn naruto:Episode_3 ;
-    anime:participatesIn naruto:Event_3_0 .
-
-naruto:Event_1_1 a anime:Event ;
-    rdfs:label "졸업시험"@ko ;
-    anime:mentionedIn naruto:Episode_1 .
-
-naruto:Event_2_2 a anime:Event ;
-    rdfs:label "주변 인물들로부터 호카게라는 이름을 얻으려 노력하는 과정."@ko ;
+    rdfs:comment "마을의 지도자이자 권위 있는 인물."@ko ;
+    anime:aliasName "3대째 호카게님"@ko ;
+    anime:familyMemberOf naruto:Character_손자님_\(3대째_호카게님의_손자\) ;
     anime:mentionedIn naruto:Episode_2 .
 
-naruto:Event_5_1 a anime:Event ;
-    rdfs:label "위령비 앞에서 영웅들의 이름에 대한 깨달음"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:InnateAbility_구미호의_눈 a anime:InnateAbility ;
-    rdfs:label "구미호의 눈"@ko ;
-    rdfs:comment "괴물 여우와 관련된 특이한 눈."@ko ;
-    anime:mentionedIn naruto:Episode_1 .
-
-naruto:InnateAbility_살기 a anime:InnateAbility ;
-    rdfs:label "살기"@ko ;
-    rdfs:comment "상대방에게 위협을 느끼게 하는 기운."@ko ;
+naruto:Character_휴우가_히나타 a anime:Character ;
+    rdfs:label "휴우가 히나타"@ko ;
+    rdfs:comment "팀원 중 한 명."@ko ;
+    anime:aliasName "히나타"@ko ;
     anime:mentionedIn naruto:Episode_3 .
 
-naruto:InnateAbility_인술 a anime:InnateAbility ;
-    rdfs:label "인술"@ko ;
-    rdfs:comment "닌자로서 사용하는 능력 (언급만 됨)"@ko ;
-    anime:mentionedIn naruto:Episode_4 .
+naruto:Clan_호카게_가문 a anime:Clan ;
+    rdfs:label "호카게 가문"@ko ;
+    rdfs:comment "마을의 지도자 역할을 하는 일족."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
 
-naruto:InnateAbility_챠크라 a anime:InnateAbility ;
-    rdfs:label "챠크라"@ko ;
-    rdfs:comment "술법 사용에 필요한 신체 에너지."@ko ;
-    anime:mentionedIn naruto:Episode_2 .
+naruto:Event_1_1 a anime:Event ;
+    rdfs:label "학생들이 졸업 자격을 증명하기 위해 치르는 시험."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:Event_3_2 a anime:Event ;
+    rdfs:label "나루토의 집에서 다른 인물과 마주침."@ko ;
+    anime:mentionedIn naruto:Episode_3 ;
+    anime:occursAt naruto:Location_나루토의_집 .
+
+naruto:Event_5_1 a anime:Event ;
+    rdfs:label "마을의 영웅들이 위령비에 새겨져 있음."@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:InnateAbility_살기\(殺氣\) a anime:InnateAbility ;
+    rdfs:label "살기(殺氣)"@ko ;
+    rdfs:comment "상대에게 적의를 느끼게 하는 기운."@ko ;
+    anime:mentionedIn naruto:Episode_3 .
 
 naruto:Item_나뭇잎_서클렛 a anime:Item ;
     rdfs:label "나뭇잎 서클렛"@ko ;
-    rdfs:comment "학교 졸업을 증명하는 물품."@ko ;
+    rdfs:comment "학교 졸업을 인정받았다는 증거물."@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
-naruto:Item_닌자_도구 a anime:Item ;
-    rdfs:label "닌자 도구"@ko ;
-    rdfs:comment "전투에 사용되는 장비 일체"@ko ;
+naruto:Item_닌자_도구_일체 a anime:Item ;
+    rdfs:label "닌자 도구 일체"@ko ;
+    rdfs:comment "전투에 사용되는 장비 (수리검 등)."@ko ;
     anime:mentionedIn naruto:Episode_4 .
 
 naruto:Item_닌자_등록증 a anime:Item ;
     rdfs:label "닌자 등록증"@ko ;
-    rdfs:comment "마을의 중요 서류."@ko ;
+    rdfs:comment "마을의 중요성을 상징하는 신분 증명 서류."@ko ;
     anime:mentionedIn naruto:Episode_2 .
 
 naruto:Item_닌자등록증 a anime:Item ;
     rdfs:label "닌자등록증"@ko ;
-    rdfs:comment "닌자의 신분을 증명하는 문서."@ko ;
+    rdfs:comment "닌자의 신분을 증명하는 증표."@ko ;
     anime:mentionedIn naruto:Episode_2 .
 
 naruto:Item_도시락 a anime:Item ;
     rdfs:label "도시락"@ko ;
-    rdfs:comment "식사 용품"@ko ;
+    rdfs:comment "돌 위에 놓여있던 물건"@ko ;
     anime:mentionedIn naruto:Episode_5 .
 
 naruto:Item_방울 a anime:Item ;
     rdfs:label "방울"@ko ;
-    rdfs:comment "테스트에 사용되는 물건"@ko ;
+    rdfs:comment "선발 테스트에서 빼앗아야 하는 물건."@ko ;
     anime:mentionedIn naruto:Episode_4,
         naruto:Episode_5 .
 
-naruto:Item_수리검 a anime:Item ;
-    rdfs:label "수리검"@ko ;
-    rdfs:comment "닌자 도구 중 하나"@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
 naruto:Item_우유 a anime:Item ;
     rdfs:label "우유"@ko ;
-    rdfs:comment "유통기한이 지났을 수 있는 음료"@ko ;
+    rdfs:comment "유통기한이 지난 음료."@ko ;
     anime:mentionedIn naruto:Episode_3 .
 
-naruto:Location_구미호 a anime:Location ;
-    rdfs:label "구미호"@ko ;
-    anime:locatedIn naruto:Location_나루토 .
+naruto:Location_공중_목욕탕 a anime:Location ;
+    rdfs:label "공중 목욕탕"@ko ;
+    rdfs:comment "훈련이나 사건의 배경이 되는 장소."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
 
-naruto:Location_나루토의_집 a anime:Location ;
-    rdfs:label "나루토의 집"@ko ;
-    rdfs:comment "나루토가 거주하는 곳"@ko ;
+naruto:Location_라면집 a anime:Location ;
+    rdfs:label "라면집"@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Location_서점 a anime:Location ;
+    rdfs:label "서점"@ko ;
+    rdfs:comment "페로몬 연구가 이루어지는 장소."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Location_아카데미 a anime:Location ;
+    rdfs:label "아카데미"@ko ;
+    rdfs:comment "닌자를 양성하는 학교 건물."@ko ;
+    anime:mentionedIn naruto:Episode_3,
+        naruto:Episode_4 .
+
+naruto:Location_파도_마을 a anime:Location ;
+    rdfs:label "파도 마을"@ko ;
+    rdfs:comment "임무 목표가 되는 지역."@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:Location_호카게의_바위 a anime:Location ;
+    rdfs:label "호카게의 바위"@ko ;
+    rdfs:comment "마을 내에 있는 호카게들의 얼굴이 새겨진 바위."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:Organization_나뭇잎_마을_닌자_학원 a anime:Organization ;
+    rdfs:label "나뭇잎 마을 닌자 학원"@ko ;
+    rdfs:comment "닌자를 양성하는 기관."@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+naruto:Organization_닌자_아카데미 a anime:Organization ;
+    rdfs:label "닌자 아카데미"@ko ;
+    rdfs:comment "졸업 시험이 치러지는 장소"@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:Organization_닌자_일족 a anime:Organization ;
+    rdfs:label "닌자 일족"@ko ;
+    rdfs:comment "전투를 수행하는 사람들의 집단."@ko ;
+    anime:mentionedIn naruto:Episode_1 ;
+    anime:participatesIn naruto:Event_1_0 .
+
+naruto:Skill_다중_그림자_분신술 a anime:Skill ;
+    rdfs:label "다중 그림자 분신술"@ko ;
+    rdfs:comment "여러 개의 분신을 만드는 고급 술법."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:Skill_밧줄_풀기_술법 a anime:Skill ;
+    rdfs:label "밧줄 풀기 술법"@ko ;
+    rdfs:comment "밧줄과 관련된 기본술법."@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+<https://anime-ontology.local/series/naruto#Skill_변화!> a anime:Skill ;
+    rdfs:label "변화!"@ko ;
+    rdfs:comment "신체나 형태를 바꾸는 술법."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Skill_부비트랩 a anime:Skill ;
+    rdfs:label "부비트랩"@ko ;
+    rdfs:comment "상위 닌자가 걸릴 수 없는 함정."@ko ;
+    anime:mentionedIn naruto:Episode_4 .
+
+naruto:Skill_인술\(忍術\) a anime:Skill ;
+    rdfs:label "인술(忍術)"@ko ;
+    rdfs:comment "닌자 전술의 일부 기술"@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:Skill_체술 a anime:Skill ;
+    rdfs:label "체술"@ko ;
+    rdfs:comment "닌자의 신체 능력을 활용한 전투 기술."@ko ;
+    anime:mentionedIn naruto:Episode_4 .
+
+<https://anime-ontology.local/series/naruto#Skill_토둔!_심중참수의_술법!> a anime:Skill ;
+    rdfs:label "토둔! 심중참수의 술법!"@ko ;
+    rdfs:comment "흙을 이용해 목을 자르는 듯한 술법"@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+<https://anime-ontology.local/series/naruto#Skill_화둔!_호화구의_술법!!!> a anime:Skill ;
+    rdfs:label "화둔! 호화구의 술법!!!"@ko ;
+    rdfs:comment "불을 이용한 강력한술법"@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:Character_손자님_\(3대째_호카게님의_손자\) a anime:Character ;
+    rdfs:label "손자님 (3대째 호카게님의 손자)"@ko .
+
+naruto:Clan_우치하_일족 a anime:Clan ;
+    rdfs:label "우치하 일족"@ko ;
+    rdfs:comment "특정 혈통을 가진 가문."@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+naruto:Event_3_1 a anime:Event ;
+    rdfs:label "후퇴하지 않고 초난해한 시련을 클리어하기 위해 노력함."@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+naruto:Event_5_3 a anime:Event ;
+    rdfs:label "제 7반의 임무 합격 및 개시 선언."@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:InnateAbility_괴물_여우의_눈 a anime:InnateAbility ;
+    rdfs:label "괴물 여우의 눈"@ko ;
+    rdfs:comment "나루토에게서 발견된 능력."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:InnateAbility_구미호의_힘 a anime:InnateAbility ;
+    rdfs:label "구미호의 힘"@ko ;
+    rdfs:comment "아홉 개의 꼬리를 휘두르는 강력한 요괴의 능력."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:Location_교실 a anime:Location ;
+    rdfs:label "교실"@ko ;
+    rdfs:comment "졸업생 설명회 및 팀 편성 장소."@ko ;
     anime:mentionedIn naruto:Episode_3 .
 
 naruto:Location_나뭇잎_마을 a anime:Location ;
     rdfs:label "나뭇잎 마을"@ko ;
-    rdfs:comment "이야기의 배경이 되는 장소."@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
-naruto:Location_라면집 a anime:Location ;
-    rdfs:label "라면집"@ko ;
-    rdfs:comment "과거에 설교가 오갔던 장소."@ko ;
-    anime:mentionedIn naruto:Episode_2 .
-
-naruto:Location_코노하_마을 a anime:Location ;
-    rdfs:label "코노하 마을"@ko ;
-    rdfs:comment "닌자들이 생활하는 마을. (자막에서 '코.노.하.마.루.'로 언급됨)"@ko ;
-    anime:mentionedIn naruto:Episode_2 .
-
-naruto:Location_파도_마을 a anime:Location ;
-    rdfs:label "파도 마을"@ko ;
-    rdfs:comment "다음 임무의 목적지"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:Location_호카게_바위 a anime:Location ;
-    rdfs:label "호카게 바위"@ko ;
-    rdfs:comment "호카게의 이름이 새겨진 기념물."@ko ;
+    rdfs:comment "주요 배경이 되는 마을."@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
-naruto:Organization_아카데미 a anime:Organization ;
-    rdfs:label "아카데미"@ko ;
-    rdfs:comment "졸업생들이 교육을 받는 기관."@ko ;
-    anime:mentionedIn naruto:Episode_3,
-        naruto:Episode_4 .
+naruto:Location_마을 a anime:Location ;
+    rdfs:label "마을"@ko ;
+    rdfs:comment "닌자들이 거주하는 곳."@ko ;
+    anime:mentionedIn naruto:Episode_2,
+        naruto:Episode_4,
+        naruto:Episode_5 .
 
-naruto:Skill_밧줄_풀기_술법 a anime:Skill ;
-    rdfs:label "밧줄 풀기 술법"@ko ;
-    rdfs:comment "밧줄과 관련된 기본술법"@ko ;
-    anime:mentionedIn naruto:Episode_3 .
-
-naruto:Skill_애로변화술 a anime:Skill ;
-    rdfs:label "애로변화술"@ko ;
-    rdfs:comment "특정 변화술의 종류."@ko ;
+naruto:Location_코노하마루 a anime:Location ;
+    rdfs:label "코노하마루"@ko ;
+    rdfs:comment "애니메이션의 배경이 되는 마을."@ko ;
     anime:mentionedIn naruto:Episode_2 .
 
-naruto:Skill_인술 a anime:Skill ;
-    rdfs:label "인술"@ko ;
-    rdfs:comment "술법을 발동시키는 기술."@ko ;
-    anime:mentionedIn naruto:Episode_2 .
-
-naruto:Skill_체술 a anime:Skill ;
-    rdfs:label "체술"@ko ;
-    rdfs:comment "닌자의 신체 능력을 활용하는 기술"@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
-<https://anime-ontology.local/series/naruto#Skill_화둔!_호화구의_술법!!!> a anime:Skill ;
-    rdfs:label "화둔! 호화구의 술법!!!"@ko ;
-    rdfs:comment "불 속성술법"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:Skill_화둔\(火遁\) a anime:Skill ;
-    rdfs:label "화둔(火遁)"@ko ;
-    rdfs:comment "불을 다루는 술법."@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
-naruto:Character_3대째_호카게님 a anime:Character ;
-    rdfs:label "3대째 호카게님"@ko ;
-    rdfs:comment "호카게 가문의 인물."@ko ;
-    anime:mentionedIn naruto:Episode_2 ;
-    anime:participatesIn naruto:Event_2_0 .
-
-naruto:Character_미즈키 a anime:Character ;
-    rdfs:label "미즈키"@ko ;
-    rdfs:comment "졸업시험을 주관하는 인물."@ko ;
-    anime:aliasName "미즈키 선생님"@ko ;
-    anime:enemyOf naruto:Character_우즈마키_나루토 ;
-    anime:mentionedIn naruto:Episode_1 .
-
-naruto:Character_이루카 a anime:Character ;
-    rdfs:label "이루카"@ko ;
-    rdfs:comment "나루토의 스승."@ko ;
-    anime:affiliatedWith naruto:Organization_닌자_아카데미 ;
-    anime:aliasName "이루카 선생님"@ko ;
+naruto:Skill_그림자_분신술 a anime:Skill ;
+    rdfs:label "그림자 분신술"@ko ;
+    rdfs:comment "실체 그 자체를 만들어내는 고도 인술."@ko ;
     anime:mentionedIn naruto:Episode_1,
         naruto:Episode_2,
-        naruto:Episode_4,
-        naruto:Episode_5 ;
-    anime:mentorOf naruto:Character_우즈마키_나루토 ;
-    anime:participatesIn naruto:Event_1_2,
-        naruto:Event_1_3 .
-
-naruto:Character_제_7반 a anime:Character ;
-    rdfs:label "제 7반"@ko .
-
-naruto:Character_하타케_카카시 a anime:Character ;
-    rdfs:label "하타케 카카시"@ko ;
-    rdfs:comment "7반의 선생님"@ko ;
-    anime:aliasName "카카시"@ko ;
-    anime:hasAbility naruto:Skill_몸_바꿔치기_술법,
-        naruto:Skill_변화술,
-        naruto:Skill_환술\(幻術\) ;
-    anime:mentionedIn naruto:Episode_4,
-        naruto:Episode_5 ;
-    anime:mentorOf naruto:Character_우즈마키_나루토,
-        naruto:Character_우치하_사스케,
-        naruto:Character_제_7반,
-        naruto:Character_하루노_사쿠라 ;
-    anime:participatesIn naruto:Event_4_1 .
-
-naruto:Event_1_0 a anime:Event ;
-    rdfs:label "요호의 출현과 봉인 시도"@ko ;
-    anime:mentionedIn naruto:Episode_1 ;
-    anime:occursAt naruto:Location_마을 .
-
-naruto:InnateAbility_그림자_분신술 a anime:InnateAbility ;
-    rdfs:label "그림자 분신술"@ko ;
-    rdfs:comment "실체 그 자체를 만들어내는 고도의 인술."@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
-naruto:Location_교실 a anime:Location ;
-    rdfs:label "교실"@ko ;
-    rdfs:comment "학생들이 수업을 듣는 장소"@ko ;
-    anime:mentionedIn naruto:Episode_3 .
-
-naruto:Location_나루토 a anime:Location ;
-    rdfs:label "나루토"@ko ;
-    anime:locatedIn naruto:Location_마을 .
-
-naruto:Organization_닌자_아카데미 a anime:Organization ;
-    rdfs:label "닌자 아카데미"@ko ;
-    rdfs:comment "닌자를 양성하는 학교"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:Organization_호카게 a anime:Organization ;
-    rdfs:label "호카게"@ko ;
-    rdfs:comment "마을의 지도자이자 닌자의 최고 경지."@ko ;
-    anime:mentionedIn naruto:Episode_1,
-        naruto:Episode_2 .
-
-naruto:Skill_구미호_봉인술 a anime:Skill ;
-    rdfs:label "구미호 봉인술"@ko ;
-    rdfs:comment "요호를 봉인하는 술법."@ko ;
-    anime:mentionedIn naruto:Episode_1 .
-
-naruto:Skill_다중_그림자_분신술 a anime:Skill ;
-    rdfs:label "다중 그림자 분신술"@ko ;
-    rdfs:comment "여러 개의 분신을 만드는 고급 술법. (봉인된 위험한 인술)"@ko ;
-    anime:mentionedIn naruto:Episode_1,
         naruto:Episode_4 .
 
 naruto:Skill_몸_바꿔치기_술법 a anime:Skill ;
@@ -338,85 +336,99 @@ naruto:Skill_몸_바꿔치기_술법 a anime:Skill ;
     rdfs:comment "본래 물체나 동물 등을 사용해 자신의 몸을 잽싸게 바꿔서 적에게 착각을 주는 술법."@ko ;
     anime:mentionedIn naruto:Episode_4 .
 
-<https://anime-ontology.local/series/naruto#Skill_토둔!_심중참수의_술법!> a anime:Skill ;
-    rdfs:label "토둔! 심중참수의 술법!"@ko ;
-    rdfs:comment "흙 속성술법"@ko ;
+naruto:Skill_애로변화술 a anime:Skill ;
+    rdfs:label "애로변화술"@ko ;
+    rdfs:comment "특정 방식으로 형태를 변화시키는 술법."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Skill_팀_웍 a anime:Skill ;
+    rdfs:label "팀 웍"@ko ;
+    rdfs:comment "동료 간의 협력과 조화."@ko ;
     anime:mentionedIn naruto:Episode_5 .
+
+naruto:Skill_화둔\(火遁\)의_술법 a anime:Skill ;
+    rdfs:label "화둔(火遁)의 술법"@ko ;
+    rdfs:comment "불을 다루는 인술."@ko ;
+    anime:mentionedIn naruto:Episode_4 .
 
 naruto:Skill_환술\(幻術\) a anime:Skill ;
     rdfs:label "환술(幻術)"@ko ;
     rdfs:comment "일종의 환각 최면법"@ko ;
     anime:mentionedIn naruto:Episode_5 .
 
-naruto:Character_하루노_사쿠라 a anime:Character ;
-    rdfs:label "하루노 사쿠라"@ko ;
-    anime:affiliatedWith naruto:Organization_닌자,
-        naruto:Organization_제_7반 ;
-    anime:aliasName "사쿠라"@ko,
-        "사쿠라쨩"@ko ;
-    anime:allyOf naruto:Character_우치하_사스케 ;
-    anime:currentLocation naruto:Location_교실 ;
-    anime:hasAbility naruto:Skill_변화술,
-        <https://anime-ontology.local/series/naruto#Skill_토둔!_심중참수의_술법!> ;
-    anime:mentionedIn naruto:Episode_1,
-        naruto:Episode_2,
-        naruto:Episode_3,
-        naruto:Episode_4,
-        naruto:Episode_5 ;
-    anime:participatesIn naruto:Event_3_0,
-        naruto:Event_4_0,
-        naruto:Event_5_0,
-        naruto:Event_5_2 .
+naruto:Event_1_0 a anime:Event ;
+    rdfs:label "요호가 마을에 접근하자 닌자가 목숨을 걸고 구미호를 봉인하는 사건."@ko ;
+    anime:mentionedIn naruto:Episode_1 .
 
 naruto:Event_1_2 a anime:Event ;
-    rdfs:label "나루토가 양친 사별과 인정받지 못함으로 겪은 고통."@ko ;
+    rdfs:label "미즈키가 나루토를 속여 두루마리를 노리는 사건"@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
 naruto:Event_1_3 a anime:Event ;
-    rdfs:label "졸업식 및 축하 행사."@ko ;
+    rdfs:label "이루카가 미즈키의 계략을 파악하고 나루토에게 진실을 알려주는 사건"@ko ;
     anime:mentionedIn naruto:Episode_1 .
 
-naruto:Event_2_1 a anime:Event ;
-    rdfs:label "4대째가 마을을 위해 나루토의 배꼽에 구미호를 봉인한 사건."@ko ;
+naruto:Event_1_4 a anime:Event ;
+    rdfs:label "졸업식 및 축하 행사"@ko ;
+    anime:mentionedIn naruto:Episode_1 .
+
+naruto:Event_2_0 a anime:Event ;
+    rdfs:label "4대째가 아기의 배꼽에 구미호를 봉인한 사건"@ko ;
     anime:mentionedIn naruto:Episode_2 .
 
-naruto:Event_3_1 a anime:Event ;
-    rdfs:label "시련! 서바이벌연습"@ko ;
-    anime:mentionedIn naruto:Episode_3 .
-
 naruto:Event_4_1 a anime:Event ;
-    rdfs:label "카카시의 테스트"@ko ;
+    rdfs:label "나뭇잎 마을 닌자 시험에서 방울을 빼앗기 위한 대결"@ko ;
     anime:mentionedIn naruto:Episode_4 .
 
-naruto:Skill_그림자_분신술 a anime:Skill ;
-    rdfs:label "그림자 분신술"@ko ;
-    rdfs:comment "실체 그 자체를 만들어내는 고도 인술."@ko ;
+naruto:InnateAbility_챠크라 a anime:InnateAbility ;
+    rdfs:label "챠크라"@ko ;
+    rdfs:comment "술법 발동에 사용되는 신체 에너지."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Location_나루토의_집 a anime:Location ;
+    rdfs:label "나루토의 집"@ko ;
+    anime:mentionedIn naruto:Episode_3 .
+
+naruto:Skill_분신술 a anime:Skill ;
+    rdfs:label "분신술"@ko ;
+    rdfs:comment "자신의 분신을 만들어내는 기본적인 인술."@ko ;
     anime:mentionedIn naruto:Episode_1,
-        naruto:Episode_2,
         naruto:Episode_3 .
+
+naruto:Skill_인술 a anime:Skill ;
+    rdfs:label "인술"@ko ;
+    rdfs:comment "닌자로서 사용하는 모든 기술을 통칭하는 술법."@ko ;
+    anime:mentionedIn naruto:Episode_2 .
+
+naruto:Event_4_0 a anime:Event ;
+    rdfs:label "하위닌자 선발 테스트"@ko ;
+    anime:mentionedIn naruto:Episode_4 .
+
+naruto:Event_5_0 a anime:Event ;
+    rdfs:label "닌자 아카데미의 졸업 시험 (팀워크와 이해를 평가하는 과정)"@ko ;
+    anime:mentionedIn naruto:Episode_5 .
+
+naruto:Event_5_2 a anime:Event ;
+    rdfs:label "오후부터 가혹한 방울 뺏기 싸움이 진행됨."@ko ;
+    anime:mentionedIn naruto:Episode_5 .
 
 naruto:Skill_변화술 a anime:Skill ;
     rdfs:label "변화술"@ko ;
-    rdfs:comment "신체를 변화시키는 술법."@ko ;
+    rdfs:comment "원소나 형태를 변화시키는 술법."@ko ;
     anime:mentionedIn naruto:Episode_1,
         naruto:Episode_2,
         naruto:Episode_4 .
 
-naruto:Skill_분신술 a anime:Skill ;
-    rdfs:label "분신술"@ko ;
-    rdfs:comment "자신의 분신을 만들어내는 기본 술법."@ko ;
-    anime:mentionedIn naruto:Episode_1,
-        naruto:Episode_3 .
-
 naruto:Character_우치하_사스케 a anime:Character ;
     rdfs:label "우치하 사스케"@ko ;
-    anime:affiliatedWith naruto:Organization_닌자,
+    rdfs:comment "졸업시험에 참여한 학생 중 한 명."@ko ;
+    anime:affiliatedWith naruto:Clan_우치하_일족,
+        naruto:Organization_7반,
         naruto:Organization_제_7반 ;
-    anime:aliasName "사스케"@ko,
-        "사스케군"@ko ;
-    anime:enemyOf naruto:Character_우즈마키_나루토 ;
-    anime:hasAbility naruto:Skill_그림자_분신술,
-        naruto:Skill_분신술 ;
+    anime:aliasName "사스케"@ko ;
+    anime:allyOf naruto:Character_우즈마키_나루토,
+        naruto:Character_하루노_사쿠라 ;
+    anime:hasAbility naruto:Skill_분신술 ;
     anime:mentionedIn naruto:Episode_1,
         naruto:Episode_2,
         naruto:Episode_3,
@@ -428,56 +440,60 @@ naruto:Character_우치하_사스케 a anime:Character ;
         naruto:Event_5_0,
         naruto:Event_5_2 .
 
-naruto:Event_2_0 a anime:Event ;
-    rdfs:label "호카게 후계자로서의 자격 시험 및 교육 과정."@ko ;
-    anime:mentionedIn naruto:Episode_2 ;
-    anime:occursAt naruto:Location_마을 .
-
-naruto:Event_4_0 a anime:Event ;
-    rdfs:label "제 4화 시련! 서바이벌연습"@ko ;
-    anime:mentionedIn naruto:Episode_4 .
-
-naruto:Event_5_0 a anime:Event ;
-    rdfs:label "닌자 아카데미 졸업 시험"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:Event_5_2 a anime:Event ;
-    rdfs:label "제 7반의 임무 합격 및 다음 임무 개시"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
-
-naruto:Location_마을 a anime:Location ;
-    rdfs:label "마을"@ko ;
-    rdfs:comment "닌자들이 거주하는 장소 (나뭇잎 마을)."@ko ;
+naruto:Character_하루노_사쿠라 a anime:Character ;
+    rdfs:label "하루노 사쿠라"@ko ;
+    rdfs:comment "졸업시험에 참여한 학생 중 한 명."@ko ;
+    anime:affiliatedWith naruto:Organization_7반,
+        naruto:Organization_제_7반 ;
+    anime:aliasName "사쿠라"@ko ;
+    anime:allyOf naruto:Character_우즈마키_나루토,
+        naruto:Character_우치하_사스케 ;
+    anime:hasAbility naruto:Skill_변화술 ;
     anime:mentionedIn naruto:Episode_1,
-        naruto:Episode_2 .
+        naruto:Episode_2,
+        naruto:Episode_3,
+        naruto:Episode_4,
+        naruto:Episode_5 ;
+    anime:participatesIn naruto:Event_3_0,
+        naruto:Event_4_0,
+        naruto:Event_5_0,
+        naruto:Event_5_2 .
 
-naruto:Organization_닌자 a anime:Organization ;
-    rdfs:label "닌자"@ko ;
-    rdfs:comment "술법을 사용하는 사람들의 집단."@ko ;
-    anime:mentionedIn naruto:Episode_2,
-        naruto:Episode_3 .
+naruto:Event_3_0 a anime:Event ;
+    rdfs:label "닌자 학원 졸업생 설명회 및 팀 편성"@ko ;
+    anime:mentionedIn naruto:Episode_3 ;
+    anime:occursAt naruto:Location_교실 .
+
+naruto:Organization_7반 a anime:Organization ;
+    rdfs:label "7반"@ko ;
+    rdfs:comment "나루토 일행이 속한 팀."@ko ;
+    anime:mentionedIn naruto:Episode_4 .
 
 naruto:Organization_제_7반 a anime:Organization ;
     rdfs:label "제 7반"@ko ;
-    rdfs:comment "닌자 팀"@ko ;
-    anime:mentionedIn naruto:Episode_5 .
+    rdfs:comment "나루토, 사스케, 사쿠라로 구성된 팀."@ko ;
+    anime:hasAbility naruto:Skill_팀_웍 ;
+    anime:mentionedIn naruto:Episode_5 ;
+    anime:participatesIn naruto:Event_5_3 .
 
 naruto:Character_우즈마키_나루토 a anime:Character ;
     rdfs:label "우즈마키 나루토"@ko ;
-    rdfs:comment "주인공. 구미호의 힘을 지니고 있다."@ko ;
-    anime:affiliatedWith naruto:Organization_닌자,
-        naruto:Organization_제_7반,
-        naruto:Organization_호카게 ;
-    anime:aliasName "나루토"@ko ;
-    anime:allyOf naruto:Character_하루노_사쿠라 ;
-    anime:enemyOf naruto:Character_미즈키,
-        naruto:Character_우치하_사스케,
-        naruto:Character_하타케_카카시 ;
-    anime:familyMemberOf naruto:Character_3대째_호카게님 ;
-    anime:hasAbility naruto:InnateAbility_그림자_분신술,
+    rdfs:comment "주인공. 호카게의 이름을 이어받고자 하는 의지를 가진 인물."@ko ;
+    anime:affiliatedWith naruto:Organization_7반,
+        naruto:Organization_제_7반 ;
+    anime:aliasName "나루토"@ko,
+        "나루토 녀석"@ko ;
+    anime:allyOf naruto:Character_우치하_사스케,
+        naruto:Character_하루노_사쿠라 ;
+    anime:currentLocation naruto:Location_나루토의_집,
+        naruto:Location_나뭇잎_마을,
+        naruto:Location_마을,
+        naruto:Location_코노하마루 ;
+    anime:hasAbility naruto:InnateAbility_괴물_여우의_눈,
+        naruto:InnateAbility_챠크라,
         naruto:Skill_그림자_분신술,
-        naruto:Skill_다중_그림자_분신술,
-        naruto:Skill_분신술 ;
+        naruto:Skill_분신술,
+        naruto:Skill_인술 ;
     anime:mentionedIn naruto:Episode_1,
         naruto:Episode_2,
         naruto:Episode_3,
@@ -485,35 +501,29 @@ naruto:Character_우즈마키_나루토 a anime:Character ;
         naruto:Episode_5 ;
     anime:participatesIn naruto:Event_1_2,
         naruto:Event_1_3,
+        naruto:Event_1_4,
         naruto:Event_2_0,
-        naruto:Event_2_1,
         naruto:Event_3_0,
-        naruto:Event_3_1,
         naruto:Event_4_0,
         naruto:Event_4_1,
         naruto:Event_5_0,
-        naruto:Event_5_2 ;
-    anime:studentOf naruto:Character_이루카 .
-
-naruto:Event_3_0 a anime:Event ;
-    rdfs:label "졸업생 설명회 및 3인 1조 임무 배정"@ko ;
-    anime:mentionedIn naruto:Episode_3 .
-
-naruto:Episode_5 a anime:Episode ;
-    rdfs:label "5화"@ko ;
-    anime:episodeNumber 5 .
+        naruto:Event_5_2 .
 
 naruto:Episode_4 a anime:Episode ;
     rdfs:label "4화"@ko ;
     anime:episodeNumber 4 .
 
-naruto:Episode_3 a anime:Episode ;
-    rdfs:label "3화"@ko ;
-    anime:episodeNumber 3 .
+naruto:Episode_5 a anime:Episode ;
+    rdfs:label "5화"@ko ;
+    anime:episodeNumber 5 .
 
 naruto:Episode_2 a anime:Episode ;
     rdfs:label "2화"@ko ;
     anime:episodeNumber 2 .
+
+naruto:Episode_3 a anime:Episode ;
+    rdfs:label "3화"@ko ;
+    anime:episodeNumber 3 .
 
 naruto:Episode_1 a anime:Episode ;
     rdfs:label "1화"@ko ;

@@ -16,6 +16,11 @@ from anime_ontology.ontology.namespaces import CORE, series_namespace
 
 _UNSAFE_IRI_CHARS = re.compile(r'[\s<>"{}|\^`]')
 
+# 매칭(동일 엔티티 판단)에서만 무시할 존칭/호칭 접미사. 표시용 이름(rdfs:label)은
+# 원래 텍스트 그대로 두고, 이름이 같은 엔티티인지 비교할 때만 이 접미사를 뗀다.
+# 예: "카카시 선생님"과 "카카시"(하타케 카카시의 별칭)가 같은 사람으로 매칭되게 함.
+_HONORIFIC_SUFFIXES = ("선생님", "님", "쨩", "군", "양", "씨")
+
 _CLASS_LOCAL_NAME = {
     CORE.Character: "Character",
     CORE.Location: "Location",
@@ -59,6 +64,16 @@ def _slugify(name: str) -> str:
     return slug or "unknown"
 
 
+def _match_key(name: str) -> str:
+    """동일 엔티티 판단에 쓰는 정규화된 이름. 존칭 접미사를 떼고 대소문자를 무시한다."""
+    normalized = name.strip()
+    for suffix in _HONORIFIC_SUFFIXES:
+        if normalized.endswith(suffix) and len(normalized) > len(suffix):
+            normalized = normalized[: -len(suffix)]
+            break
+    return normalized.casefold()
+
+
 class OntologyBuilder:
     """추출 결과를 하나의 시리즈 RDF 그래프에 병합하는 빌더."""
 
@@ -72,9 +87,9 @@ class OntologyBuilder:
         for class_uri in _CLASS_LOCAL_NAME:
             for subject in self._graph.subjects(RDF.type, class_uri):
                 for label in self._graph.objects(subject, RDFS.label):
-                    self._name_index[(class_uri, str(label).casefold())] = subject
+                    self._name_index[(class_uri, _match_key(str(label)))] = subject
                 for alias in self._graph.objects(subject, CORE.aliasName):
-                    self._name_index[(class_uri, str(alias).casefold())] = subject
+                    self._name_index[(class_uri, _match_key(str(alias)))] = subject
 
     def _episode_uri(self, episode_no: int) -> URIRef:
         return self._ns[f"Episode_{episode_no}"]
@@ -96,27 +111,33 @@ class OntologyBuilder:
         description: str = "",
     ) -> URIRef:
         name = name.strip()
-        key = (class_uri, name.casefold())
+        key = (class_uri, _match_key(name))
         uri = self._name_index.get(key)
 
         if uri is None:
             for alias in aliases or []:
-                uri = self._name_index.get((class_uri, alias.strip().casefold()))
+                uri = self._name_index.get((class_uri, _match_key(alias)))
                 if uri is not None:
                     break
 
         if uri is None:
-            conflict = next(
-                (k for k in self._name_index if k[1] == name.casefold() and k[0] != class_uri), None
+            # 다른 클래스로 이미 같은 이름의 엔티티가 있으면, 잘못된 타입의 중복
+            # 엔티티를 새로 만들지 않고 기존 엔티티를 재사용한다. 대부분의 경우
+            # LLM이 관계의 predicate/대상 타입을 잘못 짝지어 생긴 것이라, 새로 만들면
+            # (예: 캐릭터 "나루토"가 Location으로도 생성되는) 오염된 데이터가 된다.
+            conflict_key = next(
+                (k for k in self._name_index if k[1] == _match_key(name) and k[0] != class_uri), None
             )
-            if conflict is not None:
+            if conflict_key is not None:
                 print(
-                    f"경고: '{name}'이(가) 이미 {_CLASS_LOCAL_NAME[conflict[0]]} 타입으로 존재하는데 "
-                    f"{_CLASS_LOCAL_NAME[class_uri]} 타입으로도 생성 요청되었습니다. "
-                    "LLM이 관계의 predicate/대상을 잘못 짝지었을 수 있습니다.",
+                    f"경고: '{name}'이(가) 이미 {_CLASS_LOCAL_NAME[conflict_key[0]]} 타입으로 존재하는데 "
+                    f"{_CLASS_LOCAL_NAME[class_uri]} 타입으로도 참조되었습니다. 기존 엔티티를 재사용합니다 "
+                    "(LLM이 관계의 predicate/대상을 잘못 짝지었을 가능성이 있음).",
                     file=sys.stderr,
                 )
+                uri = self._name_index[conflict_key]
 
+        if uri is None:
             local_name = _CLASS_LOCAL_NAME[class_uri]
             uri = self._ns[f"{local_name}_{_slugify(name)}"]
             self._graph.add((uri, RDF.type, class_uri))
@@ -126,7 +147,7 @@ class OntologyBuilder:
 
         self._name_index[key] = uri
         for alias in aliases or []:
-            alias_key = (class_uri, alias.strip().casefold())
+            alias_key = (class_uri, _match_key(alias))
             if alias_key not in self._name_index:
                 self._graph.add((uri, CORE.aliasName, Literal(alias.strip(), lang="ko")))
             self._name_index[alias_key] = uri
