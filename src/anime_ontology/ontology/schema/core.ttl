@@ -1,0 +1,145 @@
+@prefix anime: <https://anime-ontology.local/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://anime-ontology.local/core#> a owl:Ontology ;
+    rdfs:label "애니메이션 코어 온톨로지"@ko ;
+    rdfs:comment "모든 시리즈가 공유하는 코어 클래스/속성. 시리즈별 스키마는 이 클래스들을 상속해 확장한다."@ko .
+
+# ============ 클래스 ============
+
+anime:Series a owl:Class ;
+    rdfs:label "작품"@ko ;
+    rdfs:comment "나루토, 원피스 등 하나의 영상 시리즈 전체를 나타낸다."@ko .
+
+anime:Episode a owl:Class ;
+    rdfs:label "화"@ko ;
+    rdfs:comment "시리즈를 구성하는 한 에피소드."@ko .
+
+anime:Character a owl:Class ;
+    rdfs:label "캐릭터"@ko ;
+    rdfs:comment "인간, 요괴, 짐승, 정령 등 이야기에 등장하는 행위 주체. 실제 세계의 인물 개념보다 넓게 잡아, 인간이 아닌 존재도 포함한다."@ko .
+
+anime:Organization a owl:Class ;
+    rdfs:label "조직"@ko ;
+    rdfs:comment "마을, 단체, 세력 등 캐릭터들이 소속되는 집단."@ko .
+
+anime:Clan a owl:Class ;
+    rdfs:subClassOf anime:Organization ;
+    rdfs:label "혈족/가문"@ko ;
+    rdfs:comment "혈연이나 계승 관계로 묶인 조직. many 애니메이션에서 혈통 능력과 결합되어 나타난다."@ko .
+
+anime:Location a owl:Class ;
+    rdfs:label "장소"@ko ;
+    rdfs:comment "실제 지리와 대응되지 않을 수 있는 가상의 지리적 요소(마을, 지역, 국가, 랜드마크 등)."@ko .
+
+anime:Ability a owl:Class ;
+    rdfs:label "능력"@ko ;
+    rdfs:comment "캐릭터가 사용할 수 있는 특별한 힘의 최상위 개념."@ko .
+
+anime:Skill a owl:Class ;
+    rdfs:subClassOf anime:Ability ;
+    rdfs:label "기술"@ko ;
+    rdfs:comment "훈련이나 학습으로 습득하는 기술(예: 닌자의 술법, 마법 스펠)."@ko .
+
+anime:InnateAbility a owl:Class ;
+    rdfs:subClassOf anime:Ability ;
+    rdfs:label "선천 능력"@ko ;
+    rdfs:comment "혈통이나 태생적 특성으로 갖게 되는 능력(예: 혈계한계, 종족 특성)."@ko .
+
+anime:Item a owl:Class ;
+    rdfs:label "물건"@ko ;
+    rdfs:comment "이야기 속에서 의미를 갖는 도구, 무기, 장비."@ko .
+
+anime:Artifact a owl:Class ;
+    rdfs:subClassOf anime:Item ;
+    rdfs:label "유물/특별한 물건"@ko ;
+    rdfs:comment "봉인구, 전설의 무기 등 서사적으로 특별한 힘/의미를 갖는 물건."@ko .
+
+anime:Event a owl:Class ;
+    rdfs:label "사건"@ko ;
+    rdfs:comment "특정 시점에 벌어진 전투, 의식, 만남 등의 사건."@ko .
+
+# ============ 객체 속성 ============
+
+anime:partOfSeries a owl:ObjectProperty ;
+    rdfs:domain anime:Episode ;
+    rdfs:range anime:Series ;
+    rdfs:label "소속 작품"@ko .
+
+anime:mentionedIn a owl:ObjectProperty ;
+    rdfs:range anime:Episode ;
+    rdfs:label "언급/등장한 화"@ko ;
+    rdfs:comment "어떤 개체나 사건이 처음(혹은 추가로) 등장/언급된 화. 추출 결과의 출처 추적(provenance)에 사용."@ko .
+
+anime:affiliatedWith a owl:ObjectProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Organization ;
+    rdfs:label "소속"@ko .
+
+anime:locatedIn a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:domain anime:Location ;
+    rdfs:range anime:Location ;
+    rdfs:label "상위 지역"@ko ;
+    rdfs:comment "예: 마을이 속한 지역/국가. 전이적 속성이라 A locatedIn B, B locatedIn C면 A locatedIn C도 성립."@ko .
+
+anime:currentLocation a owl:ObjectProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Location ;
+    rdfs:label "현재 위치"@ko .
+
+anime:hasAbility a owl:ObjectProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Ability ;
+    rdfs:label "보유 능력"@ko .
+
+anime:allyOf a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "동료 관계"@ko .
+
+anime:enemyOf a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "적대 관계"@ko .
+
+anime:familyMemberOf a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "가족 관계"@ko .
+
+anime:mentorOf a owl:ObjectProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "사제 관계(스승)"@ko .
+
+anime:studentOf a owl:ObjectProperty ;
+    owl:inverseOf anime:mentorOf ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "사제 관계(제자)"@ko .
+
+anime:participatesIn a owl:ObjectProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Event ;
+    rdfs:label "사건 참여"@ko .
+
+anime:occursAt a owl:ObjectProperty ;
+    rdfs:domain anime:Event ;
+    rdfs:range anime:Location ;
+    rdfs:label "발생 장소"@ko .
+
+# ============ 데이터 속성 ============
+# 이름/설명은 각 개체에 rdfs:label / rdfs:comment를 그대로 사용한다.
+
+anime:episodeNumber a owl:DatatypeProperty ;
+    rdfs:domain anime:Episode ;
+    rdfs:range xsd:integer ;
+    rdfs:label "화 번호"@ko .
+
+anime:aliasName a owl:DatatypeProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range xsd:string ;
+    rdfs:label "별칭"@ko .
