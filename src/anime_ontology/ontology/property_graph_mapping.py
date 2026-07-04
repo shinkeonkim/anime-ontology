@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import re
 
-from rdflib import RDFS, URIRef
+from rdflib import RDF, RDFS, Graph, URIRef
+from rdflib.namespace import OWL
 
 from anime_ontology.ontology.namespaces import CORE
 
@@ -42,3 +43,19 @@ def to_label(class_local_name: str) -> str:
 def to_relationship_type(property_local_name: str) -> str:
     snake = re.sub(r"(?<!^)(?=[A-Z])", "_", property_local_name).upper()
     return sanitize_identifier(snake)
+
+
+def build_superclass_closure(schema_graph: Graph) -> dict[URIRef, set[URIRef]]:
+    """클래스 -> 모든 상위 클래스(rdfs:subClassOf 전이 폐쇄) 매핑을 만든다.
+
+    예: naruto:Jutsu가 core.ttl의 anime:Skill의 하위 클래스라면, Jutsu 인스턴스는
+    OWL 의미상 Skill이기도 하고 Ability이기도 하다. rdflib는 asserted 트리플만
+    갖고 있고 이 추론을 자동으로 하지 않으므로, Neo4j로 내보낼 때 라벨을 정할 때
+    이 폐쇄 집합을 같이 붙여줘야 ":Ability" 같은 상위 개념으로도 조회할 수 있다.
+    """
+    closure: dict[URIRef, set[URIRef]] = {}
+    for class_uri in schema_graph.subjects(RDF.type, OWL.Class):
+        ancestors = set(schema_graph.transitive_objects(class_uri, RDFS.subClassOf))
+        ancestors.discard(class_uri)
+        closure[class_uri] = ancestors
+    return closure

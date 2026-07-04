@@ -13,20 +13,30 @@ from rdflib import RDF, Graph, Literal, URIRef
 from anime_ontology.neo4j_client import Neo4jSettings, open_driver
 from anime_ontology.ontology.property_graph_mapping import (
     DATATYPE_PROPERTY_FIELDS,
+    build_superclass_closure,
     local_name,
     to_label,
     to_relationship_type,
 )
+from anime_ontology.ontology.store import load_core_schema
 
 __all__ = ["Neo4jSettings", "export_graph_to_neo4j"]
 
 
 def _collect_nodes(graph: Graph) -> dict[URIRef, dict]:
+    # core.ttl에 없는(strip된) 인스턴스 그래프만 받을 수 있으므로, 라벨의 상위
+    # 클래스(:Skill -> :Ability 등)를 구하려면 코어 스키마를 다시 합쳐서 봐야 한다.
+    # 이렇게 해야 ":Ability"처럼 추상적인 라벨로도 Cypher에서 조회할 수 있다(OWL
+    # 서브클래스 의미론을 Neo4j 라벨에 반영).
+    superclass_closure = build_superclass_closure(load_core_schema() + graph)
+
     nodes: dict[URIRef, dict] = defaultdict(lambda: {"labels": set(), "props": defaultdict(list)})
 
     for subject, predicate, obj in graph:
         if predicate == RDF.type and isinstance(obj, URIRef):
             nodes[subject]["labels"].add(to_label(local_name(obj)))
+            for ancestor in superclass_closure.get(obj, set()):
+                nodes[subject]["labels"].add(to_label(local_name(ancestor)))
         elif predicate in DATATYPE_PROPERTY_FIELDS and isinstance(obj, Literal):
             field = DATATYPE_PROPERTY_FIELDS[predicate]
             nodes[subject]["props"][field].append(obj.toPython())
