@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from anime_ontology.llm.base import LLMProvider, LLMProviderError
-from anime_ontology.llm.config import env, require_env
+from anime_ontology.config import env, require_env
 
 
 class OpenAIProvider(LLMProvider):

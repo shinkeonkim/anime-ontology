@@ -2,7 +2,12 @@
 
 from anime_ontology.ontology.builder import OntologyBuilder
 from anime_ontology.ontology.namespaces import CORE, series_namespace
-from anime_ontology.ontology.store import load_series_graph, save_series_graph, series_ontology_path
+from anime_ontology.ontology.store import (
+    load_series_graph,
+    save_series_graph,
+    series_ontology_path,
+    strip_core_schema,
+)
 
 __all__ = [
     "CORE",
@@ -11,4 +16,5 @@ __all__ = [
     "load_series_graph",
     "save_series_graph",
     "series_ontology_path",
+    "strip_core_schema",
 ]

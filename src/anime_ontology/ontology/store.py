@@ -41,12 +41,22 @@ def load_series_graph(data_dir: Path, series: str) -> Graph:
     return graph
 
 
-def save_series_graph(graph: Graph, data_dir: Path, series: str) -> Path:
-    """그래프에서 코어 스키마 트리플을 제외한 시리즈 고유 부분만 파일로 저장한다."""
+def strip_core_schema(graph: Graph) -> Graph:
+    """그래프에서 코어 스키마(클래스/속성 정의) 트리플을 뺀, 시리즈 고유 데이터만 남긴다.
+
+    파일 저장(save_series_graph)과 Neo4j 내보내기 모두, 인스턴스 데이터만 다루고
+    owl:Class/rdfs:domain 같은 스키마 정의 트리플은 제외해야 하므로 공통으로 쓴다.
+    """
     core = load_core_schema()
     series_only = graph - core
     for prefix, namespace in graph.namespaces():
         series_only.bind(prefix, namespace)
+    return series_only
+
+
+def save_series_graph(graph: Graph, data_dir: Path, series: str) -> Path:
+    """그래프에서 코어 스키마 트리플을 제외한 시리즈 고유 부분만 파일로 저장한다."""
+    series_only = strip_core_schema(graph)
 
     path = series_ontology_path(data_dir, series)
     path.parent.mkdir(parents=True, exist_ok=True)

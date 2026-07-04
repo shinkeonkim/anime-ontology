@@ -43,7 +43,29 @@ cp .env.example .env   # LLM_PROVIDER 등 값 채우기
 ## 실행
 
 ```bash
-python scripts/run_episode.py --series naruto --episode 1
+# 한 화만 처리
+python scripts/run_episode.py naruto --episode 1
+
+# 여러 화를 범위로 처리 (캐시된 화는 LLM을 다시 호출하지 않음)
+python scripts/run_episode.py naruto --episodes 1-5
+
+# 캐시를 무시하고 강제로 다시 추출
+python scripts/run_episode.py naruto --episodes 1-5 --force
 ```
 
-(추출/온톨로지 빌더 구현이 진행되며 사용법이 채워집니다.)
+결과는 `data/naruto/ontology/naruto.ttl`에 누적됩니다.
+
+## Neo4j로 시각화하기 (선택)
+
+이 프로젝트 전용 Neo4j를 Docker로 띄웁니다 (호스트에 다른 Neo4j가 떠 있어도 포트가
+겹치지 않도록 7688/7475로 매핑되어 있습니다).
+
+```bash
+# .env에 NEO4J_PASSWORD를 8자 이상으로 설정한 뒤
+docker compose up -d
+
+python scripts/export_neo4j.py naruto
+```
+
+브라우저에서 http://localhost:7475 로 접속해 Cypher로 탐색할 수 있습니다 (예:
+`MATCH (n:Character)-[r]->(m) RETURN n, r, m LIMIT 100`).

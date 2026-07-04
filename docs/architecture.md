@@ -5,7 +5,7 @@
 ### 1. 온톨로지 저장 방식: 하이브리드 (RDF/OWL 기본 + Neo4j 내보내기)
 
 - 정본(source of truth)은 RDF(Turtle, `.ttl`)로 git에 텍스트 파일 형태로 저장합니다. 클래스 계층, 속성 정의(OWL)를 통해 "온톨로지"의 의미를 갖추고, 버전 관리(diff, 커밋 단위 확장)가 쉽습니다.
-- 시각화나 탐색적 질의가 필요할 때는 별도 스크립트로 Neo4j에 내보냅니다(`src/anime_ontology/export`). Neo4j는 파생 산출물이며, 언제든 RDF로부터 재생성 가능합니다(idempotent).
+- 시각화나 탐색적 질의가 필요할 때는 별도 스크립트로 Neo4j에 내보냅니다(`src/anime_ontology/export`). Neo4j는 파생 산출물이며, 언제든 RDF로부터 재생성 가능합니다(idempotent). Neo4j는 이 프로젝트 전용 `docker-compose.yml`로 띄우며(호스트의 다른 Neo4j와 겹치지 않도록 7688/7475 포트 사용), 내보내기는 URI를 유일 키로 삼아 `MERGE`만 사용하므로 몇 번을 다시 실행해도 노드/관계가 중복되지 않습니다. 온톨로지 스키마 정의(owl:Class 등)는 내보내지 않고 `ontology.strip_core_schema`로 걸러낸 인스턴스 데이터만 내보냅니다.
 
 ### 2. 개체/관계 추출: LLM Provider 추상화 (Proxy 패턴)
 
