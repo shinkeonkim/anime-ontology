@@ -110,6 +110,12 @@ anime:familyMemberOf a owl:ObjectProperty, owl:SymmetricProperty ;
     rdfs:range anime:Character ;
     rdfs:label "가족 관계"@ko .
 
+anime:rivalOf a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:domain anime:Character ;
+    rdfs:range anime:Character ;
+    rdfs:label "라이벌 관계"@ko ;
+    rdfs:comment "적이라고 하기엔 애매하고, 서로 경쟁하며 성장하는 관계(예: 나루토와 사스케)."@ko .
+
 anime:mentorOf a owl:ObjectProperty ;
     rdfs:domain anime:Character ;
     rdfs:range anime:Character ;

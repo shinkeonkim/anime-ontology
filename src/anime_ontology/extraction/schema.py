@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field
 RelationPredicate = Literal[
     "ally_of",
     "enemy_of",
+    "rival_of",
     "family_member_of",
     "mentor_of",
     "student_of",

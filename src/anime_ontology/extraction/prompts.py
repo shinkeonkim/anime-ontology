@@ -29,15 +29,18 @@ JSON 스키마:
   "abilities": [{"name": str, "kind": "skill"|"innate", "used_by": [캐릭터 이름], "description": str}],
   "items": [{"name": str, "is_artifact": bool, "description": str}],
   "events": [{"description": str, "participants": [캐릭터 이름], "location": str|null}],
-  "relations": [{"subject": str, "predicate": "ally_of"|"enemy_of"|"family_member_of"|"mentor_of"|"student_of"|"affiliated_with"|"current_location"|"located_in", "object": str}]
+  "relations": [{"subject": str, "predicate": "ally_of"|"enemy_of"|"rival_of"|"family_member_of"|"mentor_of"|"student_of"|"affiliated_with"|"current_location"|"located_in", "object": str}]
 }
 
-relations의 predicate 의미:
+relations의 predicate 의미. 반드시 이 목록에 있는 값만 쓰고, 다른 단어를 지어내지 않는다:
 - ally_of/enemy_of/family_member_of: 캐릭터-캐릭터 대칭 관계
+- rival_of: 적이라 하기엔 애매하고 서로 경쟁하며 성장하는 관계(예: 나루토-사스케)
 - mentor_of: subject가 object의 스승, student_of: subject가 object의 제자
 - affiliated_with: subject(캐릭터)가 object(조직)에 소속
 - current_location: subject(캐릭터)가 object(장소)에 있음
 - located_in: subject(장소)가 object(장소)에 속함(상위 지역)
+- 위 어느 것에도 맞지 않는 관계는 relations에 넣지 않는다(새로운 predicate 이름을
+  만들어내지 않는다).
 """
 
 _USER_TEMPLATE = """\

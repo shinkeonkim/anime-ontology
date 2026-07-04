@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from anime_ontology.pipeline import parse_episode_range, run_episode
+from anime_ontology.pipeline import parse_episode_range, run_episodes
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -39,10 +39,9 @@ def main() -> None:
     series_dir = args.series_dir or (REPO_ROOT / args.series)
     episode_numbers = [args.episode] if args.episode else parse_episode_range(args.episodes)
 
-    for episode_no in episode_numbers:
-        print(f"[{args.series}] {episode_no}화 처리 중...")
-        output_path = run_episode(series_dir, args.data_dir, episode_no, force=args.force)
-        print(f"  -> {output_path}")
+    print(f"[{args.series}] {len(episode_numbers)}개 화 처리 시작")
+    output_path = run_episodes(series_dir, args.data_dir, episode_numbers, force=args.force)
+    print(f"완료: {output_path}")
 
 
 if __name__ == "__main__":

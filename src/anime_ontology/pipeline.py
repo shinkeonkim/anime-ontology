@@ -120,11 +120,29 @@ def run_episodes(
     transcription: TranscriptionProvider | None = None,
     force: bool = False,
 ) -> Path:
-    """여러 화를 순서대로 처리한다. 마지막으로 저장된 ttl 경로를 반환한다."""
+    """여러 화를 순서대로 처리한다. 마지막으로 저장된 ttl 경로를 반환한다.
+
+    한 화 처리가 실패해도(예: LLM이 스키마에 없는 값을 만들어내는 등) 배치 전체를
+    멈추지 않고 다음 화로 계속 진행한다. 실패한 화는 stderr에 남기고, 필요하면
+    나중에 그 화만 다시 실행하면 된다(캐시 덕분에 이미 성공한 화는 다시 부르지 않음).
+    """
+
+    if not episode_numbers:
+        raise ValueError("처리할 화 번호가 비어 있습니다.")
 
     output_path: Path | None = None
+    failures: list[tuple[int, str]] = []
     for episode_no in episode_numbers:
-        output_path = run_episode(series_dir, data_dir, episode_no, llm=llm, transcription=transcription, force=force)
+        print(f"{episode_no}화 처리 중...")
+        try:
+            output_path = run_episode(series_dir, data_dir, episode_no, llm=llm, transcription=transcription, force=force)
+            print(f"  -> {output_path}")
+        except Exception as exc:  # noqa: BLE001 - 한 화의 실패가 전체 배치를 중단시키지 않게 한다
+            failures.append((episode_no, str(exc)))
+            print(f"  경고: {episode_no}화 처리 실패, 다음 화로 계속합니다: {exc}", file=sys.stderr)
+
+    if failures:
+        print(f"총 {len(failures)}개 화 처리 실패: {[no for no, _ in failures]}", file=sys.stderr)
     if output_path is None:
-        raise ValueError("처리할 화 번호가 비어 있습니다.")
+        raise RuntimeError(f"모든 화 처리가 실패했습니다: {failures}")
     return output_path

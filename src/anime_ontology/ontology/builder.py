@@ -38,6 +38,7 @@ _CLASS_LOCAL_NAME = {
 _RELATION_PROPERTY = {
     "ally_of": CORE.allyOf,
     "enemy_of": CORE.enemyOf,
+    "rival_of": CORE.rivalOf,
     "family_member_of": CORE.familyMemberOf,
     "mentor_of": CORE.mentorOf,
     "student_of": CORE.studentOf,
@@ -50,6 +51,7 @@ _RELATION_PROPERTY = {
 _RELATION_ENDPOINT_CLASSES = {
     "ally_of": (CORE.Character, CORE.Character),
     "enemy_of": (CORE.Character, CORE.Character),
+    "rival_of": (CORE.Character, CORE.Character),
     "family_member_of": (CORE.Character, CORE.Character),
     "mentor_of": (CORE.Character, CORE.Character),
     "student_of": (CORE.Character, CORE.Character),
